@@ -66,7 +66,7 @@ Install packages for testing::
   (py27) $ python setup.py dev
 
 
-If you additonally want `tox` tests, you might have to::
+If you additonally want `tox`_ tests, you might have to::
 
   (py27) $ pip install tox
 
@@ -75,17 +75,17 @@ Running tests::
 
   (py27) $ py.test
 
-We also support `tox` to run tests for all supported Python
+We also support `tox`_ to run tests for all supported Python
 versions. The current list of supported Python versions is available
 in `tox.ini`. Of course, for the respective tests to run you have to
 have the respective Python version installed. You can, for instance,
 only test with Python 2.7, if this version of Python is installed.
 
-`tox` tests are triggered::
+`tox`_ tests are triggered::
 
   (py27) $ tox
 
-if tox is installed.
+if tox_ is installed.
 
 
 Test Coverage
@@ -119,7 +119,8 @@ License
 
 ..
 
-    >>> doctest.teardown()
+    >>> doctest_teardown()
 
 
 .. _Sphinx: http://sphinx-doc.org/
+.. _tox: https://tox.readthedocs.org/en/latest/
