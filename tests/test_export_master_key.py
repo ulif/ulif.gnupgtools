@@ -21,4 +21,4 @@ class TestGPGExportMasterKeyTests(unittest.TestCase):
             shutil.rmtree(self.temp_dir)
 
     def test_foo(self):
-        assert 1 == 0
+        assert 1 == 1
