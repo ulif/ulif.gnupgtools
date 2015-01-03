@@ -91,7 +91,7 @@ The latter will generate HTML coverage reports in a subdirectory.
 Documentation
 -------------
 
-We provide `Sphinx` docs:
+We provide `Sphinx`_ docs:
 
   (py27) $ python setup.py docs
   (py27) $ cd doc
@@ -109,3 +109,6 @@ License
 ..
 
     >>> doctest.teardown()
+
+
+.. _Sphinx: http://sphinx-doc.org/
