@@ -59,7 +59,7 @@ setup(
     cmdclass={'test': PyTest},
     entry_points={
         'console_scripts': [
-            'gpg-export-master-key = gnupgtools.export_master_key:main',
+            'gpg-export-master-key = ulif.gnupgtools.export_master_key:main',
         ]
         }
 )
