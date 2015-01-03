@@ -16,7 +16,7 @@ import subprocess
 import sys
 import tempfile
 
-VERSION = pkg_resources.get_distribution('gnupgtools').version
+VERSION = pkg_resources.get_distribution('ulif.gnupgtools').version
 
 def greeting():
     """Startup message.
