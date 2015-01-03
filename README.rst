@@ -5,8 +5,8 @@ Tools to ease use of GnuPG tasks
 
 |build-status|_
 
-.. .. |build-status| image:: https://travis-ci.org/ulif/ulif.gnupgtools.png?branch=master
-.. .. _build-status: https://travis-ci.org/ulif/ulif.gnupgtools
+.. |build-status| image:: https://travis-ci.org/ulif/ulif.gnupgtools.png?branch=master
+.. _build-status: https://travis-ci.org/ulif/ulif.gnupgtools
 
 
 Resources
