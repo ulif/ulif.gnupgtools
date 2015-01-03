@@ -2,6 +2,8 @@ import os
 import shutil
 import tempfile
 import unittest
+from ulif.gnupgtools.export_master_key import main
+
 
 class TestGPGExportMasterKeyTests(unittest.TestCase):
 
@@ -20,5 +22,6 @@ class TestGPGExportMasterKeyTests(unittest.TestCase):
         if os.path.exists(self.temp_dir):
             shutil.rmtree(self.temp_dir)
 
-    def test_foo(self):
-        assert 1 == 1
+    def test_main_exists(self):
+        # the main function exists
+        assert main is not None
