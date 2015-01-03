@@ -63,6 +63,22 @@ def output_key_list(key_list):
     We expect a list of triples (ids, id_info, key) where `ids` is a
     list of uids bound to the given key, `id_info` is text describing
     the key and `key` is the short key as a hex number.
+
+    The input is formatted somewhat 'nicely' for output.
+
+    Example:
+
+        >>> key_list = [
+        ...   (['foo1', 'foo2'], 'bar', 'baz'),
+        ...   (['boo'], 'far', 'bar'),
+        ... ]
+        >>> output_key_list(key_list)
+        [  1] bar
+              foo1
+              foo2
+        [  2] far
+              boo
+
     """
     for num, list_entry in enumerate(key_list):
         ids, info, key = list_entry
