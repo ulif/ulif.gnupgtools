@@ -42,7 +42,7 @@ setup(
     url="http://pypi.python.org/pypi/GPGHelpers",
     packages=['ulif'],
     namespace_packages=['ulif', ],
-    long_description=read('README'),
+    long_description=read('README.rst'),
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Topic :: Utilities",
