@@ -58,7 +58,6 @@ Now clone the sources::
   (py27) $ git clone https://github.com/ulif/ulif.gnupgtools.git
   (py27) $ cd ulif.gnupgtools
 
-
 Testing
 -------
 
@@ -66,15 +65,27 @@ Install packages for testing::
 
   (py27) $ python setup.py dev
 
+
+If you additonally want `tox` tests, you might have to::
+
+  (py27) $ pip install tox
+
+
 Running tests::
 
   (py27) $ py.test
 
 We also support `tox` to run tests for all supported Python
-versions. The current list is available in `tox.ini`. Of course, for
-the respective tests to run you have to have the respective Python
-version installed. You can, for instance, only test with Python 2.7,
-if this version of Python is installed.
+versions. The current list of supported Python versions is available
+in `tox.ini`. Of course, for the respective tests to run you have to
+have the respective Python version installed. You can, for instance,
+only test with Python 2.7, if this version of Python is installed.
+
+`tox` tests are triggered::
+
+  (py27) $ tox
+
+if tox is installed.
 
 
 Test Coverage
