@@ -18,12 +18,15 @@ import tempfile
 
 VERSION = pkg_resources.get_distribution('ulif.gnupgtools').version
 
+
 def greeting():
     """Startup message.
     """
     print ("gpg-export-master-key.py %s; Copyright (C) 2014 Uli Fouquet. "
-    "This is free software: you are free to change and redistribute it. "
-    "There is NO WARRANTY, to the extent permitted by law. ") % (VERSION,)
+           "This is free software: you are free to change and redistribute "
+           "it. There is NO WARRANTY, to the extent permitted by law. "
+           ) % (VERSION,)
+
 
 def get_secret_keys_output():
     """Get a list of all secret keys as output by GPG.
@@ -34,6 +37,7 @@ def get_secret_keys_output():
                             shell=True)
     output, err = proc.communicate()
     return output, err
+
 
 def get_key_list():
     """Parse gpg output to create a list of secret keys.
@@ -56,6 +60,7 @@ def get_key_list():
     if curr_key is not None:
         key_list.append((curr_ids, id_info, curr_key))
     return sorted(key_list)
+
 
 def output_key_list(key_list):
     """Output key list to screen.

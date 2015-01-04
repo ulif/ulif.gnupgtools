@@ -1,6 +1,8 @@
 #
 # Helpers for testing
 #
+
+
 def doctest_setup():
     """Setup env for complex doctests.
     """

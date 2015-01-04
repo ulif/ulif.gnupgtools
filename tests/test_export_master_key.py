@@ -2,7 +2,9 @@ import os
 import shutil
 import tempfile
 import unittest
-from ulif.gnupgtools.export_master_key import main
+import ulif.gnupgtools
+from ulif.gnupgtools import export_master_key
+from ulif.gnupgtools.export_master_key import main, greeting, VERSION
 
 
 class TestGPGExportMasterKeyTests(unittest.TestCase):
@@ -25,3 +27,15 @@ class TestGPGExportMasterKeyTests(unittest.TestCase):
     def test_main_exists(self):
         # the main function exists
         assert main is not None
+
+    def test_version(self):
+        # we can get a version string
+        assert VERSION is not None
+
+
+def test_greeting(capsys):
+    # in user greetings we tell about license and version
+    greeting()
+    out, err = capsys.readouterr()
+    assert "free software" in out
+    assert VERSION in out
