@@ -2,8 +2,6 @@ import os
 import shutil
 import tempfile
 import unittest
-import ulif.gnupgtools
-from ulif.gnupgtools import export_master_key
 from ulif.gnupgtools.export_master_key import main, greeting, VERSION
 
 
