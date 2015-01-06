@@ -17,3 +17,8 @@ The passphrase of all secret keys is ``secret``.
 `three-secret-two-uid`:
    contains one public key, one secret one with three subkeys and two
    user ids.
+
+`two-users`:
+   contains the same as `three-secret-two-uid` and an additional
+   keypair (public/private) for ``bob@example.org``. Also Bob's
+   secret passphrase is ``secret``.
