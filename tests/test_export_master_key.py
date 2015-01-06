@@ -3,7 +3,7 @@ import shutil
 import tempfile
 import unittest
 from ulif.gnupgtools.export_master_key import (
-    main, greeting, VERSION, get_secret_keys_output,
+    main, greeting, VERSION, get_secret_keys_output, get_key_list,
     )
 
 
@@ -53,6 +53,22 @@ class TestGPGExportMasterKeyTests(unittest.TestCase):
             "ssb   2048R/75DD62A6 2015-01-06\n"
             "\n"
             )
+
+    def test_get_key_list(self):
+        # we can get a list of secret keys
+        self.create_sample_gnupg_home('two-users')
+        result = get_key_list()
+        assert result == [
+            (
+                ['Bob Tester <bob@example.org>'],
+                'sec   2048R/DAA011C5 2015-01-06', 'DAA011C5'
+                ),
+            (
+                ['Gnupg Testuser (no real person) <gnupg@example.org>',
+                 'Gnupg Testuser (Other Identity) <gnupg@example.org>'],
+                'sec   2048R/16FD1DE8 2015-01-06', '16FD1DE8'
+                )
+            ]
 
 
 def test_greeting(capsys):
