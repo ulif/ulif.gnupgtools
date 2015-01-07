@@ -118,6 +118,8 @@ def input_key(max_key):
 
 def export_keys(hex_id):
     """Export key wih id `hex_id`.
+
+    Returns directory, where all exported data was written to.
     """
     tmp_dir = tempfile.mkdtemp()
     pub_path = os.path.join(tmp_dir, "%s.pub" % hex_id)
@@ -145,7 +147,7 @@ def export_keys(hex_id):
 
     print
     print "All export files written to directory %s." % (tmp_dir)
-    return
+    return tmp_dir
 
 
 def main():
