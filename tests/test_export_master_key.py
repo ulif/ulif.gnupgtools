@@ -4,6 +4,7 @@ import tempfile
 import unittest
 from ulif.gnupgtools.export_master_key import (
     main, greeting, VERSION, get_secret_keys_output, get_key_list,
+    export_keys,
     )
 
 
@@ -69,6 +70,14 @@ class TestGPGExportMasterKeyTests(unittest.TestCase):
                 'sec   2048R/16FD1DE8 2015-01-06', '16FD1DE8'
                 )
             ]
+
+    def test_export_keys(self):
+        # we can export a certain, existing key
+        self.create_sample_gnupg_home('two-users')
+        result_dir = export_keys('DAA011C5')
+        assert os.path.isdir(result_dir)
+        assert sorted(os.listdir(result_dir)) == [
+            'DAA011C5.priv', 'DAA011C5.pub', 'DAA011C5.subkeys']
 
 
 def test_greeting(capsys):
