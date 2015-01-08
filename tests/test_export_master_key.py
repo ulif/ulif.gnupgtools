@@ -36,7 +36,10 @@ class TestGPGExportMasterKeyTests(unittest.TestCase):
     def fake_raw_input(self, prompt=None):
         if prompt:
             print prompt,
-        return self.fake_input_value
+        curr_value = self.fake_input_value[0]
+        self.fake_input_value = self.fake_input_value[1:]
+        print curr_value
+        return curr_value
 
     def create_sample_gnupg_home(self, name):
         # create a gnupg sample config in self.gnupg_home
@@ -94,9 +97,33 @@ class TestGPGExportMasterKeyTests(unittest.TestCase):
 
     def test_input_key(self):
         # we get a valid input key.
-        self.fake_input_value = "2"
+        self.fake_input_value = ["2", ]
         result = input_key(3)
         assert result == 2
+
+    def test_input_key_non_numbers(self):
+        # we do not accept non numbers
+        self.fake_input_value = ["not-a-number", "2"]
+        result = input_key(3)
+        assert result == 2
+
+    def test_input_key_min(self):
+        # we must enter at least 1
+        self.fake_input_value = ["0", "-1", "1"]
+        result = input_key(3)
+        assert result == 1
+
+    def test_input_key_max(self):
+        # we allow at most passed in number
+        self.fake_input_value = ["12", "4", "3"]
+        result =input_key(3)
+        assert result == 3
+
+    def test_input_key_exit(self):
+        # we can abort with 'q'
+        self.fake_input_value = ["q"]
+        self.assertRaises(
+            SystemExit, input_key, 3)
 
 
 def test_greeting(capsys):
