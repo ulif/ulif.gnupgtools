@@ -34,6 +34,8 @@ class TestGPGExportMasterKeyTests(unittest.TestCase):
             shutil.rmtree(self.temp_dir)
 
     def fake_raw_input(self, prompt=None):
+        # this raw_input() replacement fakes input of the values
+        # stored in self.fake_input_value.
         if prompt:
             print prompt,
         curr_value = self.fake_input_value[0]
