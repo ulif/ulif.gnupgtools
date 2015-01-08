@@ -116,7 +116,7 @@ class TestGPGExportMasterKeyTests(unittest.TestCase):
     def test_input_key_max(self):
         # we allow at most the number passed in
         self.fake_input_value = ["12", "4", "3", "2"]
-        result =input_key(3)
+        result = input_key(3)
         assert result == 3
 
     def test_input_key_exit(self):
