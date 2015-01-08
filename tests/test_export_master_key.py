@@ -1,11 +1,15 @@
+import __builtin__
 import os
 import shutil
 import tempfile
 import unittest
 from ulif.gnupgtools.export_master_key import (
     main, greeting, VERSION, get_secret_keys_output, get_key_list,
-    export_keys,
+    export_keys, input_key,
     )
+
+
+ORIG_RAW_INPUT = __builtin__.raw_input
 
 
 class TestGPGExportMasterKeyTests(unittest.TestCase):
@@ -16,14 +20,23 @@ class TestGPGExportMasterKeyTests(unittest.TestCase):
         self.gnupg_home = os.path.join(self.temp_dir, 'gnupghome')
         self.old_env_gnupg_home = os.getenv('GNUPGHOME', None)
         os.environ['GNUPGHOME'] = self.gnupg_home
+        # setup fake raw_input
+        self.fake_input_value = None  # returned by fake_raw_input
+        __builtin__.raw_input = self.fake_raw_input
 
     def tearDown(self):
+        __builtin__.raw_input = ORIG_RAW_INPUT   # restore mocked func.
         if self.old_env_gnupg_home is None:
             del os.environ['GNUPGHOME']
         else:
             os.environ['GNUPGHOME'] = self.old_env_gnupg_home
         if os.path.exists(self.temp_dir):
             shutil.rmtree(self.temp_dir)
+
+    def fake_raw_input(self, prompt=None):
+        if prompt:
+            print prompt,
+        return self.fake_input_value
 
     def create_sample_gnupg_home(self, name):
         # create a gnupg sample config in self.gnupg_home
@@ -78,6 +91,12 @@ class TestGPGExportMasterKeyTests(unittest.TestCase):
         assert os.path.isdir(result_dir)
         assert sorted(os.listdir(result_dir)) == [
             'DAA011C5.priv', 'DAA011C5.pub', 'DAA011C5.subkeys']
+
+    def test_input_key(self):
+        # we get a valid input key.
+        self.fake_input_value = "2"
+        result = input_key(3)
+        assert result == 2
 
 
 def test_greeting(capsys):
