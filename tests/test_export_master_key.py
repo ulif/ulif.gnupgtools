@@ -40,6 +40,35 @@ def mock_input(request):
     return mocker
 
 
+class GnuPGHomeCreator(object):
+
+    def __init__(self):
+        self.temp_dir = tempfile.mkdtemp()
+        self.workdir = os.path.join(self.temp_dir, 'work')
+        self.gnupg_home = os.path.join(self.temp_dir, 'gnupghome')
+        self._old_env = os.environ.copy()
+
+    def tear_down(self):
+        if os.path.exists(self.temp_dir):
+            shutil.rmtree(self.temp_dir)
+        os.environ.clear()
+        os.environ.update(self._old_env)
+
+    def create_sample_gnupg_home(self, name):
+        # create a gnupg sample config in self.gnupg_home
+        # name must be one of the subdirs in `gnupg-samples/`.
+        sample_home = os.path.join(
+            os.path.dirname(__file__), 'gnupg-samples', name)
+        shutil.copytree(sample_home, self.gnupg_home)
+
+
+@pytest.fixture(scope="function")
+def gnupg_home_creator(request):
+    creator = GnuPGHomeCreator()
+    request.addfinalizer(creator.tear_down)
+    return creator
+
+
 class TestGPGExportMasterKeyTests(unittest.TestCase):
 
     def setUp(self):
@@ -124,6 +153,7 @@ class TestGPGExportMasterKeyTests(unittest.TestCase):
         assert os.path.isdir(result_dir)
         assert sorted(os.listdir(result_dir)) == [
             'DAA011C5.priv', 'DAA011C5.pub', 'DAA011C5.subkeys']
+        shutil.rmtree(result_dir)
 
     def test_input_key(self):
         # we get a valid input key.
@@ -169,3 +199,13 @@ def test_input_key_non_numbers(mock_input, capsys):
     mock_input.fake_input_values = ["not-a-number", "2"]
     result = input_key(3)
     assert result == 2
+
+
+def test_export_keys(gnupg_home_creator):
+    # we can export a certain, existing key
+    gnupg_home_creator.create_sample_gnupg_home('two-users')
+    result_dir = export_keys('DAA011C5')
+    assert os.path.isdir(result_dir)
+    assert sorted(os.listdir(result_dir)) == [
+        'DAA011C5.priv', 'DAA011C5.pub', 'DAA011C5.subkeys']
+    shutil.rmtree(result_dir)  # clean up
