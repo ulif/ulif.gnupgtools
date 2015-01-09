@@ -13,10 +13,6 @@ from ulif.gnupgtools.export_master_key import (
 ORIG_RAW_INPUT = __builtin__.raw_input
 
 
-def restore_raw_input():
-    __builtin__.raw_input = ORIG_RAW_INPUT
-
-
 class InputMock(object):
     """Mock for generic `raw_input` or `input` method.
     """
@@ -31,12 +27,16 @@ class InputMock(object):
         print curr_value
         return curr_value
 
+    @classmethod
+    def restore_raw_input(cls):
+        __builtin__.raw_input = ORIG_RAW_INPUT
+
 
 @pytest.fixture(scope="module")
 def mock_input(request):
     mocker = InputMock()
     __builtin__.raw_input = mocker.input_replacement
-    request.addfinalizer(restore_raw_input)
+    request.addfinalizer(mocker.restore_raw_input)
     return mocker
 
 
