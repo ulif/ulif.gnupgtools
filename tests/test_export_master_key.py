@@ -13,29 +13,31 @@ from ulif.gnupgtools.export_master_key import (
 ORIG_RAW_INPUT = __builtin__.raw_input
 
 
-fake_input_values = ""
-
-
-def mock_raw_input(prompt=None):
-    global fake_input_values
-    if prompt:
-        print prompt,
-    curr_value = fake_input_values[0]
-    fake_input_values = fake_input_values[1:]
-    print curr_value
-    return curr_value
-
-
 def restore_raw_input():
     __builtin__.raw_input = ORIG_RAW_INPUT
 
 
+class InputMock(object):
+    """Mock for generic `raw_input` or `input` method.
+    """
+
+    fake_input_values = []
+
+    def input_replacement(self, prompt=None):
+        if prompt:
+            print prompt,
+        curr_value = self.fake_input_values[0]
+        self.fake_input_values = self.fake_input_values[1:]
+        print curr_value
+        return curr_value
+
+
 @pytest.fixture(scope="module")
 def mock_input(request):
-    __builtin__.raw_input = mock_raw_input
+    mocker = InputMock()
+    __builtin__.raw_input = mocker.input_replacement
     request.addfinalizer(restore_raw_input)
-    myvar = "foo"
-    return myvar
+    return mocker
 
 
 class TestGPGExportMasterKeyTests(unittest.TestCase):
@@ -164,7 +166,6 @@ def test_greeting(capsys):
 
 def test_input_key_non_numbers(mock_input, capsys):
     # we do not accept non numbers
-    global fake_input_values
-    fake_input_values = ["not-a-number", "2"]
+    mock_input.fake_input_values = ["not-a-number", "2"]
     result = input_key(3)
     assert result == 2
