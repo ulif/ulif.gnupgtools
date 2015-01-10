@@ -31,7 +31,7 @@ def greeting():
 def get_secret_keys_output():
     """Get a list of all secret keys as output by GPG.
     """
-    print "Locally available keys (with secret parts available):"
+    print("Locally available keys (with secret parts available):")
 
     proc = subprocess.Popen(["gpg -K", ], stdout=subprocess.PIPE,
                             shell=True)
@@ -87,9 +87,9 @@ def output_key_list(key_list):
     """
     for num, list_entry in enumerate(key_list):
         ids, info, key = list_entry
-        print "[%3d] %s" % (num + 1, info)
+        print("[%3d] %s" % (num + 1, info))
         for name in ids:
-            print "      %s" % name
+            print("      %s" % name)
 
 
 def input_key(max_key):
@@ -105,7 +105,7 @@ def input_key(max_key):
     while entry_num is None:
         entry_num = raw_input(prompt_text)
         if entry_num == "q":
-            print "Okay, abort."
+            print("Okay, abort.")
             sys.exit(0)
         try:
             entry_num = int(entry_num)
@@ -129,24 +129,26 @@ def export_keys(hex_id):
     cmd = "gpg --export --armor %s > %s" % (
         hex_id, pub_path)
     os.system(cmd)
-    print "Exported public key to: %s" % (pub_path, )
+    print("Exported public key to: %s" % (pub_path, ))
 
     cmd = "gpg --export-secret-keys --armor %s > %s" % (
         hex_id, priv_path)
     os.system(cmd)
-    print "Exported secret keys to: %s" % (priv_path)
+    print("Exported secret keys to: %s" % (priv_path))
 
     cmd = "gpg --export-secret-subkeys --armor %s > %s" % (
         hex_id, subs_path)
     os.system(cmd)
-    print "Exported subkeys belonging to this key to: %s" % (subs_path)
+    print("Exported subkeys belonging to this key to: %s" % (subs_path))
 
-    print "Copy these three files to your not-so-secure machine and"
-    print "import them (`gpg --import %s.pub %s.priv`)." % (
+    print(
+        "Copy these three files to your not-so-secure machine and"
+        "import them (`gpg --import %s.pub %s.priv`)." % (
         hex_id, hex_id)
+        )
 
-    print
-    print "All export files written to directory %s." % (tmp_dir)
+    print()
+    print("All export files written to directory %s." % (tmp_dir))
     return tmp_dir
 
 
@@ -158,6 +160,6 @@ def main():
     entry_num = input_key(max_key)
 
     picked_hex_id = key_list[entry_num - 1][2]
-    print "Picked key: ", entry_num, key_list[entry_num - 1][2]
+    print("Picked key: ", entry_num, key_list[entry_num - 1][2])
 
     export_keys(picked_hex_id)
