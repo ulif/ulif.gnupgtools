@@ -50,8 +50,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'ulif.gnupgtools'
-copyright = u'2015, Uli Fouquet'
+project = 'ulif.gnupgtools'
+copyright = '2015, Uli Fouquet'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -222,8 +222,8 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-  ('index', 'ulifgnupgtools.tex', u'ulif.gnupgtools Documentation',
-   u'Uli Fouquet', 'manual'),
+  ('index', 'ulifgnupgtools.tex', 'ulif.gnupgtools Documentation',
+   'Uli Fouquet', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -252,8 +252,8 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'ulifgnupgtools', u'ulif.gnupgtools Documentation',
-     [u'Uli Fouquet'], 1)
+    ('index', 'ulifgnupgtools', 'ulif.gnupgtools Documentation',
+     ['Uli Fouquet'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -266,8 +266,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'ulifgnupgtools', u'ulif.gnupgtools Documentation',
-   u'Uli Fouquet', 'ulifgnupgtools', 'One line description of project.',
+  ('index', 'ulifgnupgtools', 'ulif.gnupgtools Documentation',
+   'Uli Fouquet', 'ulifgnupgtools', 'One line description of project.',
    'Miscellaneous'),
 ]
 
@@ -287,10 +287,10 @@ texinfo_documents = [
 # -- Options for Epub output ----------------------------------------------
 
 # Bibliographic Dublin Core info.
-epub_title = u'ulif.gnupgtools'
-epub_author = u'Uli Fouquet'
-epub_publisher = u'Uli Fouquet'
-epub_copyright = u'2015, Uli Fouquet'
+epub_title = 'ulif.gnupgtools'
+epub_author = 'Uli Fouquet'
+epub_publisher = 'Uli Fouquet'
+epub_copyright = '2015, Uli Fouquet'
 
 # The basename for the epub file. It defaults to the project name.
 #epub_basename = u'ulif.gnupgtools'
