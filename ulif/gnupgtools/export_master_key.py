@@ -144,7 +144,7 @@ def export_keys(hex_id):
     print(
         "Copy these three files to your not-so-secure machine and"
         "import them (`gpg --import %s.pub %s.priv`)." % (
-        hex_id, hex_id)
+            hex_id, hex_id)
         )
 
     print()
