@@ -1,4 +1,7 @@
-import __builtin__
+try:
+    import builtins                 # python 3.x
+except ImportError:
+    import __builtin__ as builtins  # python 2.x
 import os
 import pytest
 import shutil
@@ -10,7 +13,7 @@ from ulif.gnupgtools.export_master_key import (
     )
 
 
-ORIG_RAW_INPUT = __builtin__.raw_input
+ORIG_RAW_INPUT = builtins.raw_input
 
 
 class InputMock(object):
@@ -21,21 +24,21 @@ class InputMock(object):
 
     def input_replacement(self, prompt=None):
         if prompt:
-            print prompt,
+            print(prompt, )
         curr_value = self.fake_input_values[0]
         self.fake_input_values = self.fake_input_values[1:]
-        print curr_value
+        print(curr_value)
         return curr_value
 
     @classmethod
     def restore_raw_input(cls):
-        __builtin__.raw_input = ORIG_RAW_INPUT
+        builtins.raw_input = ORIG_RAW_INPUT
 
 
 @pytest.fixture(scope="module")
 def mock_input(request):
     mocker = InputMock()
-    __builtin__.raw_input = mocker.input_replacement
+    builtins.raw_input = mocker.input_replacement
     request.addfinalizer(mocker.restore_raw_input)
     return mocker
 
@@ -79,10 +82,10 @@ class TestGPGExportMasterKeyTests(unittest.TestCase):
         os.environ['GNUPGHOME'] = self.gnupg_home
         # setup fake raw_input
         self.fake_input_value = None  # returned by fake_raw_input
-        __builtin__.raw_input = self.fake_raw_input
+        builtins.raw_input = self.fake_raw_input
 
     def tearDown(self):
-        __builtin__.raw_input = ORIG_RAW_INPUT   # restore mocked func.
+        builtins.raw_input = ORIG_RAW_INPUT   # restore mocked func.
         if self.old_env_gnupg_home is None:
             del os.environ['GNUPGHOME']
         else:
@@ -94,11 +97,11 @@ class TestGPGExportMasterKeyTests(unittest.TestCase):
         # this raw_input() replacement fakes input of the values
         # stored in self.fake_input_value.
         if prompt:
-            print prompt,
+            print(prompt, )
         curr_value = self.fake_input_value[0]
         self.fake_input_value = self.fake_input_value[1:]
-        print curr_value
-        return curr_value
+        print(curr_value)
+        return(curr_value)
 
     def create_sample_gnupg_home(self, name):
         # create a gnupg sample config in self.gnupg_home
