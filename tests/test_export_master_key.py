@@ -1,7 +1,3 @@
-try:
-    import builtins                 # python 3.x
-except ImportError:
-    import __builtin__ as builtins  # python 2.x
 import os
 import pytest
 import shutil
@@ -14,9 +10,9 @@ from ulif.gnupgtools.export_master_key import (
     )
 
 try:
-    ORIG_RAW_INPUT = builtins.raw_input  # python 2.x
-except AttributeError:
-    ORIG_RAW_INPUT = builtins.input      # python 3.x
+    ORIG_RAW_INPUT = raw_input           # python 2.x
+except NameError:
+    ORIG_RAW_INPUT = input               # python 3.x
 
 
 class InputMock(object):
