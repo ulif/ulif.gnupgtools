@@ -12,8 +12,10 @@ from ulif.gnupgtools.export_master_key import (
     export_keys, input_key,
     )
 
-
-ORIG_RAW_INPUT = builtins.raw_input
+try:
+    ORIG_RAW_INPUT = builtins.raw_input  # python 2.x
+except AttributeError:
+    ORIG_RAW_INPUT = builtins.input      # python 3.x
 
 
 class InputMock(object):
@@ -124,13 +126,13 @@ class TestGPGExportMasterKeyTests(unittest.TestCase):
         out, err = get_secret_keys_output()
         assert err is None
         assert out[-198:] == (
-            "/gnupghome/secring.gpg\n"
-            "------------------------------------\n"
-            "sec   2048R/16FD1DE8 2015-01-06\n"
-            "uid                  Gnupg Testuser (no real person) "
-            "<gnupg@example.org>\n"
-            "ssb   2048R/75DD62A6 2015-01-06\n"
-            "\n"
+            b"/gnupghome/secring.gpg\n"
+            b"------------------------------------\n"
+            b"sec   2048R/16FD1DE8 2015-01-06\n"
+            b"uid                  Gnupg Testuser (no real person) "
+            b"<gnupg@example.org>\n"
+            b"ssb   2048R/75DD62A6 2015-01-06\n"
+            b"\n"
             )
 
     def test_get_key_list(self):
