@@ -5,8 +5,10 @@ except ImportError:
 import os
 import pytest
 import shutil
+import sys
 import tempfile
 import unittest
+import ulif.gnupgtools.export_master_key
 from ulif.gnupgtools.export_master_key import (
     main, greeting, VERSION, get_secret_keys_output, get_key_list,
     export_keys, input_key,
@@ -34,13 +36,13 @@ class InputMock(object):
 
     @classmethod
     def restore_raw_input(cls):
-        builtins.raw_input = ORIG_RAW_INPUT
+        ulif.gnupgtools.export_master_key.input_func = ORIG_RAW_INPUT
 
 
 @pytest.fixture(scope="module")
 def mock_input(request):
     mocker = InputMock()
-    builtins.raw_input = mocker.input_replacement
+    ulif.gnupgtools.export_master_key.input_func = mocker.input_replacement
     request.addfinalizer(mocker.restore_raw_input)
     return mocker
 
@@ -84,10 +86,10 @@ class TestGPGExportMasterKeyTests(unittest.TestCase):
         os.environ['GNUPGHOME'] = self.gnupg_home
         # setup fake raw_input
         self.fake_input_value = None  # returned by fake_raw_input
-        builtins.raw_input = self.fake_raw_input
+        ulif.gnupgtools.export_master_key.input_func = self.fake_raw_input
 
     def tearDown(self):
-        builtins.raw_input = ORIG_RAW_INPUT   # restore mocked func.
+        ulif.gnupgtools.export_master_key.input_func = ORIG_RAW_INPUT
         if self.old_env_gnupg_home is None:
             del os.environ['GNUPGHOME']
         else:

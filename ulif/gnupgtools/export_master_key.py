@@ -16,8 +16,10 @@ import subprocess
 import sys
 import tempfile
 
-if sys.version[0] > "2":
-    raw_input = input
+
+input_func = input
+if sys.version[0] < "3":
+    input_func = raw_input
 
 
 VERSION = pkg_resources.get_distribution('ulif.gnupgtools').version
@@ -109,7 +111,7 @@ def input_key(max_key):
     # pick an entry to process
     entry_num = None
     while entry_num is None:
-        entry_num = raw_input(prompt_text)
+        entry_num = input_func(prompt_text)
         if entry_num == "q":
             print("Okay, abort.")
             sys.exit(0)
