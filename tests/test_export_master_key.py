@@ -5,7 +5,6 @@ except ImportError:
 import os
 import pytest
 import shutil
-import sys
 import tempfile
 import unittest
 import ulif.gnupgtools.export_master_key
