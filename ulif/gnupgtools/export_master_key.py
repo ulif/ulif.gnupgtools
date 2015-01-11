@@ -53,14 +53,14 @@ def get_key_list():
     curr_key = None
     curr_ids = []
     id_info = []
-    for line in output.split("\n"):
-        if line.startswith("sec"):
+    for line in output.split(b"\n"):
+        if line.startswith(b"sec"):
             if curr_key is not None:
                 key_list.append((curr_ids, id_info, curr_key))
             curr_ids = []
             id_info = line
-            curr_key = line.split("/")[1].split(" ")[0]
-        elif line.startswith("uid"):
+            curr_key = line.split(b"/")[1].split(b" ")[0]
+        elif line.startswith(b"uid"):
             uid = line[3:].strip()
             curr_ids.append(uid)
     if curr_key is not None:
