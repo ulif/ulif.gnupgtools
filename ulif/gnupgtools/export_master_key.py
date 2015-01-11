@@ -19,7 +19,7 @@ import tempfile
 
 input_func = input
 if sys.version[0] < "3":
-    input_func = raw_input
+    input_func = raw_input  # pragma: no cover
 
 
 VERSION = pkg_resources.get_distribution('ulif.gnupgtools').version
