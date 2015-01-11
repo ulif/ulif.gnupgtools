@@ -16,16 +16,22 @@ import subprocess
 import sys
 import tempfile
 
+if sys.version[0] > "2":
+    raw_input = input
+
+
 VERSION = pkg_resources.get_distribution('ulif.gnupgtools').version
 
 
 def greeting():
     """Startup message.
     """
-    print ("gpg-export-master-key.py %s; Copyright (C) 2014 Uli Fouquet. "
+    print(
+        ("gpg-export-master-key.py %s; Copyright (C) 2014 Uli Fouquet. "
            "This is free software: you are free to change and redistribute "
            "it. There is NO WARRANTY, to the extent permitted by law. "
-           ) % (VERSION,)
+         ) % VERSION
+        )
 
 
 def get_secret_keys_output():
