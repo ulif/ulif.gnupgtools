@@ -118,7 +118,7 @@ def input_key(max_key):
         try:
             entry_num = int(entry_num)
         except ValueError:
-            entry_num = None
+            entry_num = 0
         if (entry_num < 1) or (entry_num > max_key):
             entry_num = None
     return entry_num
