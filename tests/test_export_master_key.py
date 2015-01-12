@@ -2,7 +2,6 @@ import os
 import pytest
 import shutil
 import tempfile
-import unittest
 import ulif.gnupgtools.export_master_key
 from ulif.gnupgtools.export_master_key import (
     main, greeting, VERSION, get_secret_keys_output, get_key_list,
@@ -72,93 +71,6 @@ def gnupg_home_creator(request):
     return creator
 
 
-class TestGPGExportMasterKeyTests(unittest.TestCase):
-
-    def setUp(self):
-        self.temp_dir = tempfile.mkdtemp()
-        self.workdir = os.path.join(self.temp_dir, 'work')
-        self.gnupg_home = os.path.join(self.temp_dir, 'gnupghome')
-        self.old_env_gnupg_home = os.getenv('GNUPGHOME', None)
-        os.environ['GNUPGHOME'] = self.gnupg_home
-        # setup fake raw_input
-        self.fake_input_value = None  # returned by fake_raw_input
-        ulif.gnupgtools.export_master_key.input_func = self.fake_raw_input
-
-    def tearDown(self):
-        ulif.gnupgtools.export_master_key.input_func = ORIG_RAW_INPUT
-        if self.old_env_gnupg_home is None:
-            del os.environ['GNUPGHOME']
-        else:
-            os.environ['GNUPGHOME'] = self.old_env_gnupg_home
-        if os.path.exists(self.temp_dir):
-            shutil.rmtree(self.temp_dir)
-
-    def fake_raw_input(self, prompt=None):
-        # this raw_input() replacement fakes input of the values
-        # stored in self.fake_input_value.
-        if prompt:
-            print(prompt, )
-        curr_value = self.fake_input_value[0]
-        self.fake_input_value = self.fake_input_value[1:]
-        print(curr_value)
-        return(curr_value)
-
-    def create_sample_gnupg_home(self, name):
-        # create a gnupg sample config in self.gnupg_home
-        # name must be one of the subdirs in `gnupg-samples/`.
-        sample_home = os.path.join(
-            os.path.dirname(__file__), 'gnupg-samples', name)
-        shutil.copytree(sample_home, self.gnupg_home)
-
-    def test_main_exists(self):
-        # the main function exists
-        assert main is not None
-
-    def test_version(self):
-        # we can get a version string
-        assert VERSION is not None
-
-    def test_get_secret_keys_output(self):
-        # we can get secret keys via gpg commandline tool
-        self.create_sample_gnupg_home('one-secret')
-        out, err = get_secret_keys_output()
-        assert err is None
-        assert out[-198:] == (
-            b"/gnupghome/secring.gpg\n"
-            b"------------------------------------\n"
-            b"sec   2048R/16FD1DE8 2015-01-06\n"
-            b"uid                  Gnupg Testuser (no real person) "
-            b"<gnupg@example.org>\n"
-            b"ssb   2048R/75DD62A6 2015-01-06\n"
-            b"\n"
-            )
-
-    def test_get_key_list(self):
-        # we can get a list of secret keys
-        self.create_sample_gnupg_home('two-users')
-        result = get_key_list()
-        assert result == [
-            (
-                [b'Bob Tester <bob@example.org>'],
-                b'sec   2048R/DAA011C5 2015-01-06', b'DAA011C5'
-                ),
-            (
-                [b'Gnupg Testuser (no real person) <gnupg@example.org>',
-                 b'Gnupg Testuser (Other Identity) <gnupg@example.org>'],
-                b'sec   2048R/16FD1DE8 2015-01-06', b'16FD1DE8'
-                )
-            ]
-
-    def test_export_keys(self):
-        # we can export a certain, existing key
-        self.create_sample_gnupg_home('two-users')
-        result_dir = export_keys('DAA011C5')
-        assert os.path.isdir(result_dir)
-        assert sorted(os.listdir(result_dir)) == [
-            'DAA011C5.priv', 'DAA011C5.pub', 'DAA011C5.subkeys']
-        shutil.rmtree(result_dir)
-
-
 class TestInputKey(object):
     # tests for input_key function
 
@@ -193,22 +105,63 @@ class TestInputKey(object):
             input_key(3)
 
 
-def test_greeting(capsys):
-    # in user greetings we tell about license and version
-    greeting()
-    out, err = capsys.readouterr()
-    assert "free software" in out
-    assert VERSION in out
+class TestExportMasterKeyModule(object):
+    # export_master_key module tests (except input_key, s. above)
 
+    def test_main_exists(self):
+        # the main function exists
+        assert main is not None
 
-def test_export_keys(gnupg_home_creator):
-    # we can export a certain, existing key
-    gnupg_home_creator.create_sample_gnupg_home('two-users')
-    result_dir = export_keys('DAA011C5')
-    assert os.path.isdir(result_dir)
-    assert sorted(os.listdir(result_dir)) == [
-        'DAA011C5.priv', 'DAA011C5.pub', 'DAA011C5.subkeys']
-    priv_file_path = os.path.join(result_dir, 'DAA011C5.priv')
-    file_size = os.path.getsize(priv_file_path)
-    assert file_size > 0
-    shutil.rmtree(result_dir)  # clean up
+    def test_version(self):
+        # we can get a version string
+        assert VERSION is not None
+
+    def test_greeting(self, capsys):
+        # in user greetings we tell about license and version
+        greeting()
+        out, err = capsys.readouterr()
+        assert "free software" in out
+        assert VERSION in out
+
+    def test_get_secret_keys_output(self, gnupg_home_creator):
+        # we can get secret keys via gpg commandline tool
+        gnupg_home_creator.create_sample_gnupg_home('one-secret')
+        out, err = get_secret_keys_output()
+        assert err is None
+        assert out[-198:] == (
+            b"/gnupghome/secring.gpg\n"
+            b"------------------------------------\n"
+            b"sec   2048R/16FD1DE8 2015-01-06\n"
+            b"uid                  Gnupg Testuser (no real person) "
+            b"<gnupg@example.org>\n"
+            b"ssb   2048R/75DD62A6 2015-01-06\n"
+            b"\n"
+            )
+
+    def test_get_key_list(self, gnupg_home_creator):
+        # we can get a list of secret keys
+        gnupg_home_creator.create_sample_gnupg_home('two-users')
+        result = get_key_list()
+        assert result == [
+            (
+                [b'Bob Tester <bob@example.org>'],
+                b'sec   2048R/DAA011C5 2015-01-06', b'DAA011C5'
+                ),
+            (
+                [b'Gnupg Testuser (no real person) <gnupg@example.org>',
+                 b'Gnupg Testuser (Other Identity) <gnupg@example.org>'],
+                b'sec   2048R/16FD1DE8 2015-01-06', b'16FD1DE8'
+                )
+            ]
+
+    def test_export_keys(self, gnupg_home_creator):
+        # we can export a certain, existing key
+        gnupg_home_creator.create_sample_gnupg_home('two-users')
+        result_dir = export_keys('DAA011C5')
+        assert os.path.isdir(result_dir)
+        assert sorted(os.listdir(result_dir)) == [
+            'DAA011C5.priv', 'DAA011C5.pub', 'DAA011C5.subkeys']
+        priv_file_path = os.path.join(result_dir, 'DAA011C5.priv')
+        file_size = os.path.getsize(priv_file_path)
+        assert file_size > 0
+        shutil.rmtree(result_dir)  # clean up
