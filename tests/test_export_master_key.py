@@ -168,7 +168,7 @@ class TestInputKey(object):
         result = input_key(3)
         assert result == 2
 
-    def test_input_key_non_numbers(self, mock_input, capsys):
+    def test_input_key_non_numbers(self, mock_input):
         # we do not accept non numbers
         mock_input.fake_input_values = ["not-a-number", "2"]
         result = input_key(3)
