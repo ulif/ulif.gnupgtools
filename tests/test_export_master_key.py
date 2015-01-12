@@ -22,11 +22,11 @@ class InputMock(object):
     fake_input_values = []
 
     def input_replacement(self, prompt=None):
-        if prompt:
-            print(prompt, )
+        if not prompt:
+            prompt = ''
         curr_value = self.fake_input_values[0]
         self.fake_input_values = self.fake_input_values[1:]
-        print(curr_value)
+        print("%s%s" % (prompt, curr_value))
         return curr_value
 
     @classmethod
