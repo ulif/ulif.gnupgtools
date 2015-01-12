@@ -49,6 +49,7 @@ class GnuPGHomeCreator(object):
         self.workdir = os.path.join(self.temp_dir, 'work')
         self.gnupg_home = os.path.join(self.temp_dir, 'gnupghome')
         self._old_env = os.environ.copy()
+        os.environ['GNUPGHOME'] = self.gnupg_home
 
     def tear_down(self):
         if os.path.exists(self.temp_dir):
@@ -210,4 +211,7 @@ def test_export_keys(gnupg_home_creator):
     assert os.path.isdir(result_dir)
     assert sorted(os.listdir(result_dir)) == [
         'DAA011C5.priv', 'DAA011C5.pub', 'DAA011C5.subkeys']
+    priv_file_path = os.path.join(result_dir, 'DAA011C5.priv')
+    file_size = os.path.getsize(priv_file_path)
+    assert file_size > 0
     shutil.rmtree(result_dir)  # clean up
