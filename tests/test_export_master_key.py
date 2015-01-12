@@ -158,35 +158,39 @@ class TestGPGExportMasterKeyTests(unittest.TestCase):
             'DAA011C5.priv', 'DAA011C5.pub', 'DAA011C5.subkeys']
         shutil.rmtree(result_dir)
 
-    def test_input_key(self):
+
+class TestInputKey(object):
+    # tests for input_key function
+
+    def test_input_key(self, mock_input):
         # we get a valid input key.
-        self.fake_input_value = ["2", ]
+        mock_input.fake_input_values = ["2", ]
         result = input_key(3)
         assert result == 2
 
-    def test_input_key_non_numbers(self):
+    def test_input_key_non_numbers(self, mock_input, capsys):
         # we do not accept non numbers
-        self.fake_input_value = ["not-a-number", "2"]
+        mock_input.fake_input_values = ["not-a-number", "2"]
         result = input_key(3)
         assert result == 2
 
-    def test_input_key_min(self):
+    def test_input_key_min(self, mock_input):
         # we must enter at least 1
-        self.fake_input_value = ["0", "-1", "1", "2"]
+        mock_input.fake_input_values = ["0", "-1", "1", "2"]
         result = input_key(3)
         assert result == 1
 
-    def test_input_key_max(self):
+    def test_input_key_max(self, mock_input):
         # we allow at most the number passed in
-        self.fake_input_value = ["12", "4", "3", "2"]
+        mock_input.fake_input_values = ["12", "4", "3", "2"]
         result = input_key(3)
         assert result == 3
 
-    def test_input_key_exit(self):
+    def test_input_key_exit(self, mock_input):
         # we can abort with 'q'
-        self.fake_input_value = ["q"]
-        self.assertRaises(
-            SystemExit, input_key, 3)
+        mock_input.fake_input_values = ["q"]
+        with pytest.raises(SystemExit):
+            input_key(3)
 
 
 def test_greeting(capsys):
@@ -195,13 +199,6 @@ def test_greeting(capsys):
     out, err = capsys.readouterr()
     assert "free software" in out
     assert VERSION in out
-
-
-def test_input_key_non_numbers(mock_input, capsys):
-    # we do not accept non numbers
-    mock_input.fake_input_values = ["not-a-number", "2"]
-    result = input_key(3)
-    assert result == 2
 
 
 def test_export_keys(gnupg_home_creator):
