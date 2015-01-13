@@ -29,6 +29,30 @@ if sys.version[0] < "3":
 VERSION = pkg_resources.get_distribution('ulif.gnupgtools').version
 
 
+def s(text):
+    """Turn `text` into a string.
+
+    Mainly designed to turn binary strings in Python 3 into regular
+    strings.
+
+      >>> s('a')
+      'a'
+      >>> s(b'a')
+      'a'
+
+    Also lists of texts are supported:
+
+      >>> s([b'list', 'entry'])
+      ['list', 'entry']
+
+    """
+    if isinstance(text, list):
+        return [s(x) for x in text]
+    if not isinstance(text, str):
+        text = text.decode('utf-8')
+    return text
+
+
 def greeting():
     """Startup message.
     """
