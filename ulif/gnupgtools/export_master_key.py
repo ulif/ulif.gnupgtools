@@ -67,8 +67,8 @@ def greeting():
 def get_secret_keys_output():
     """Get a list of all secret keys as output by GPG.
     """
-    proc = subprocess.Popen(["gpg -K", ], stdout=subprocess.PIPE,
-                            shell=True)
+    proc = subprocess.Popen(["gpg", "-K"], stdout=subprocess.PIPE,
+                            shell=False)
     output, err = proc.communicate()
     return output, err
 
