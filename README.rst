@@ -1,12 +1,19 @@
-ulif.gnupgtools
-===============
+ulif.gnupgtools -- GnuPG easy
+=============================
 
-Tools to ease use of GnuPG tasks
+Commandline tools to ease some of the more complex operations possible
+with GnuPG.
+
 
 |build-status|_
 
 .. |build-status| image:: https://travis-ci.org/ulif/ulif.gnupgtools.png?branch=master
 .. _build-status: https://travis-ci.org/ulif/ulif.gnupgtools
+
+The package currently provides the following commandline tools:
+
+  - ``export_master_key``
+
 
 
 Resources
@@ -22,16 +29,36 @@ The documentation can be found at
 
 .. contents::
 
-..
+.. testsetup::
+   :hide:
 
-  >>> from ulif.gnupgtools.testing import (
-  ...   doctest_setup, doctest_teardown)
-  >>> doctest_setup()
+   from ulif.gnupgtools.testing import doctest_setup
+   doctest_setup()
 
 Examples
 ========
 
-XXX: TBD
+Create an export of a secret master key::
+
+  $ gpg-export-master-key
+  gpg-export-master-key.py 0.1.dev0; Copyright (C) 2014 Uli Fouquet.
+  This is free software: you are free to change and redistribute it.
+  There is NO WARRANTY, to the extent permitted by law.
+  Locally available keys (with secret parts available):
+  [  1] sec   2048R/DAA011C5 2015-01-06
+        b'Bob Tester <bob@example.org>'
+  [  2] sec   2048R/16FD1DE8 2015-01-06
+        b'Gnupg Testuser (no real person) <gnupg@example.org>'
+        b'Gnupg Testuser (Other Identity) <gnupg@example.org>'
+  Which key do you want to export? (1..2; q to quit): 1
+  Picked key:  1 DAA011C5
+  Exported public key to: /.../DAA011C5.pub
+  Exported secret keys to: /.../DAA011C5.priv
+  Exported subkeys belonging to this key to: /.../DAA011C5.subkeys
+  Copy these three files to your not-so-secure machine and
+  import them (`gpg --import DAA011C5.pub DAA011C5.priv`).
+
+  All export files written to directory /....
 
 
 Install
@@ -117,9 +144,10 @@ License
 `ulif.gnupgtools` is covered by the GPL version 3 or later.
 
 
-..
+.. testcleanup::
 
-    >>> doctest_teardown()
+    from ulif.gnupgtools.testing import doctest_teardown
+    doctest_teardown()
 
 
 .. _Sphinx: http://sphinx-doc.org/
