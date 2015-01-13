@@ -179,3 +179,17 @@ class TestExportMasterKeyModule(object):
         with pytest.raises(ValueError) as exc_info:
             export_keys('not-a-hex')
         assert 'Not a valid hex number: not-a-hex' in exc_info.value.args
+
+    def test_main(self, gnupg_home_creator, mock_input, capsys):
+        # we can export keys via the main() function
+        gnupg_home_creator.create_sample_gnupg_home('two-users')
+        mock_input.fake_input_values = ["1"]
+        result_dir = main()
+        out, err = capsys.readouterr()
+        assert os.path.isdir(result_dir)
+        assert sorted(os.listdir(result_dir)) == [
+            'DAA011C5.priv', 'DAA011C5.pub', 'DAA011C5.subkeys']
+        priv_file_path = os.path.join(result_dir, 'DAA011C5.priv')
+        file_size = os.path.getsize(priv_file_path)
+        assert file_size > 0
+        shutil.rmtree(result_dir)  # clean up
