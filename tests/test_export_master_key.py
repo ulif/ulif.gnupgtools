@@ -154,12 +154,12 @@ class TestExportMasterKeyModule(object):
         assert result == [
             (
                 [b'Bob Tester <bob@example.org>'],
-                b'sec   2048R/DAA011C5 2015-01-06', b'DAA011C5'
+                'sec   2048R/DAA011C5 2015-01-06', 'DAA011C5'
                 ),
             (
                 [b'Gnupg Testuser (no real person) <gnupg@example.org>',
                  b'Gnupg Testuser (Other Identity) <gnupg@example.org>'],
-                b'sec   2048R/16FD1DE8 2015-01-06', b'16FD1DE8'
+                'sec   2048R/16FD1DE8 2015-01-06', '16FD1DE8'
                 )
             ]
 

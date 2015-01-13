@@ -86,7 +86,7 @@ def get_key_list():
     for line in output.split(b"\n"):
         if line.startswith(b"sec"):
             if curr_key is not None:
-                key_list.append((curr_ids, id_info, curr_key))
+                key_list.append((curr_ids, s(id_info), s(curr_key)))
             curr_ids = []
             id_info = line
             curr_key = line.split(b"/")[1].split(b" ")[0]
@@ -94,7 +94,7 @@ def get_key_list():
             uid = line[3:].strip()
             curr_ids.append(uid)
     if curr_key is not None:
-        key_list.append((curr_ids, id_info, curr_key))
+        key_list.append((curr_ids, s(id_info), s(curr_key)))
     return sorted(key_list)
 
 
