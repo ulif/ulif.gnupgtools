@@ -170,4 +170,4 @@ def main():
     picked_hex_id = key_list[entry_num - 1][2]
     print("Picked key: ", entry_num, key_list[entry_num - 1][2])
 
-    export_keys(picked_hex_id)
+    return export_keys(picked_hex_id)
