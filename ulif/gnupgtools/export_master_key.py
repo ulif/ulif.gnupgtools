@@ -12,9 +12,13 @@
 #
 import os
 import pkg_resources
+import re
 import subprocess
 import sys
 import tempfile
+
+
+RE_HEX_NUMBER = re.compile('(^[a-f0-9]+)$|(^[A-F0-9]+$)')
 
 
 input_func = input
@@ -129,6 +133,9 @@ def export_keys(hex_id):
 
     Returns directory, where all exported data was written to.
     """
+    hex_id = str(hex_id)
+    if not RE_HEX_NUMBER.match(hex_id):
+        raise ValueError('Not a valid hex number: %s' % hex_id)
     tmp_dir = tempfile.mkdtemp()
     pub_path = os.path.join(tmp_dir, "%s.pub" % hex_id)
     priv_path = os.path.join(tmp_dir, "%s.priv" % hex_id)

@@ -5,7 +5,7 @@ import tempfile
 import ulif.gnupgtools.export_master_key
 from ulif.gnupgtools.export_master_key import (
     main, greeting, VERSION, get_secret_keys_output, get_key_list,
-    export_keys, input_key,
+    export_keys, input_key, RE_HEX_NUMBER,
     )
 
 try:
@@ -108,6 +108,15 @@ class TestInputKey(object):
 class TestExportMasterKeyModule(object):
     # export_master_key module tests (except input_key, s. above)
 
+    def test_RE_HEX_NUMBER(self):
+        assert RE_HEX_NUMBER.match('abcdef0')
+        assert RE_HEX_NUMBER.match('ABCDEF0')
+        assert RE_HEX_NUMBER.match('0')
+        assert not RE_HEX_NUMBER.match('0a1B2c')  # mixed case
+        assert not RE_HEX_NUMBER.match('b"01234"')
+        assert not RE_HEX_NUMBER.match('not-a-hex-num')
+        assert not RE_HEX_NUMBER.match('')
+
     def test_main_exists(self):
         # the main function exists
         assert main is not None
@@ -165,3 +174,8 @@ class TestExportMasterKeyModule(object):
         file_size = os.path.getsize(priv_file_path)
         assert file_size > 0
         shutil.rmtree(result_dir)  # clean up
+
+    def test_export_keys_requires_valid_hex_num(self, gnupg_home_creator):
+        with pytest.raises(ValueError) as exc_info:
+            export_keys('not-a-hex')
+        assert 'Not a valid hex number: not-a-hex' in exc_info.value.args
