@@ -67,8 +67,6 @@ def greeting():
 def get_secret_keys_output():
     """Get a list of all secret keys as output by GPG.
     """
-    print("Locally available keys (with secret parts available):")
-
     proc = subprocess.Popen(["gpg -K", ], stdout=subprocess.PIPE,
                             shell=True)
     output, err = proc.communicate()
@@ -194,6 +192,7 @@ def export_keys(hex_id):
 def main():
     greeting()
     key_list = get_key_list()
+    print("Locally available keys (with secret parts available):")
     output_key_list(key_list)
     max_key = len(key_list)
     entry_num = input_key(max_key)
