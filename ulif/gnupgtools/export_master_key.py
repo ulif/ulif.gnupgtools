@@ -150,6 +150,18 @@ def input_key(max_key):
     return entry_num
 
 
+def execute(cmd_list):
+    """Execute the command in `cmd_list`.
+
+    Returns (stdout, stderr) output.
+    """
+    proc = subprocess.Popen(
+        cmd_list, stdout=subprocess.PIPE, shell=False)
+    output, err = proc.communicate()
+    print(err)
+    return output, err
+
+
 def export_keys(hex_id):
     """Export key wih id `hex_id`.
 
@@ -163,19 +175,21 @@ def export_keys(hex_id):
     priv_path = os.path.join(tmp_dir, "%s.priv" % hex_id)
     subs_path = os.path.join(tmp_dir, "%s.subkeys" % hex_id)
 
-    cmd = "gpg --export --armor --output %s %s" % (
-        pub_path, hex_id)
-    os.system(cmd)
+    execute(
+        ["gpg", "--export", "--armor", "--output", pub_path, hex_id]
+        )
     print("Exported public key to: %s" % (pub_path, ))
 
-    cmd = "gpg --export-secret-keys --armor --output %s %s" % (
-        priv_path, hex_id)
-    os.system(cmd)
+    execute(
+        ["gpg", "--export-secret-keys", "--armor",
+         "--output", priv_path, hex_id]
+        )
     print("Exported secret keys to: %s" % (priv_path))
 
-    cmd = "gpg --export-secret-subkeys --armor --output %s %s" % (
-        subs_path, hex_id)
-    os.system(cmd)
+    execute(
+        ["gpg", "--export-secret-subkeys", "--armor",
+         "--output", subs_path, hex_id]
+        )
     print("Exported subkeys belonging to this key to: %s" % (subs_path))
 
     print(
