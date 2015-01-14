@@ -13,6 +13,7 @@
 import os
 import pkg_resources
 import re
+import stat
 import subprocess
 import sys
 import tarfile
@@ -20,9 +21,11 @@ import tempfile
 import time
 from io import BytesIO
 
-
+#: Regular expression representing a hexadecimal number
 RE_HEX_NUMBER = re.compile('(^[a-f0-9]+)$|(^[A-F0-9]+$)')
 
+#: Flags to set for user read/write permissions (no group, nor others)
+PERM_USER_RW_ONLY = stat.S_IRUSR | stat.S_IWUSR
 
 input_func = input
 if sys.version[0] < "3":
@@ -68,15 +71,14 @@ def create_tarfile(archive_name, members_dict):
     permissions.)
     """
     tar = tarfile.TarFile(name=archive_name, mode="w")
-    os.chmod(archive_name, 384)  # ~ octal 0600 ~ rw-------
+    os.chmod(archive_name, PERM_USER_RW_ONLY)  # ~ octal 0600 ~ rw-------
     for name, content in members_dict.items():
         info = tarfile.TarInfo(name=name)
-        info.mode = 384          # ~ octal 0600 = rw-------
+        info.mode = PERM_USER_RW_ONLY          # ~ octal 0600 = rw-------
         info.mtime = time.time()
         info.size = len(content)
         tar.addfile(tarinfo=info, fileobj=BytesIO(content))
     tar.close()
-    os.chmod(archive_name, 384)
 
 
 def greeting():
