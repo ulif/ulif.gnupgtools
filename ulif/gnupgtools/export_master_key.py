@@ -163,18 +163,18 @@ def export_keys(hex_id):
     priv_path = os.path.join(tmp_dir, "%s.priv" % hex_id)
     subs_path = os.path.join(tmp_dir, "%s.subkeys" % hex_id)
 
-    cmd = "gpg --export --armor %s > %s" % (
-        hex_id, pub_path)
+    cmd = "gpg --export --armor --output %s %s" % (
+        pub_path, hex_id)
     os.system(cmd)
     print("Exported public key to: %s" % (pub_path, ))
 
-    cmd = "gpg --export-secret-keys --armor %s > %s" % (
-        hex_id, priv_path)
+    cmd = "gpg --export-secret-keys --armor --output %s %s" % (
+        priv_path, hex_id)
     os.system(cmd)
     print("Exported secret keys to: %s" % (priv_path))
 
-    cmd = "gpg --export-secret-subkeys --armor %s > %s" % (
-        hex_id, subs_path)
+    cmd = "gpg --export-secret-subkeys --armor --output %s %s" % (
+        subs_path, hex_id)
     os.system(cmd)
     print("Exported subkeys belonging to this key to: %s" % (subs_path))
 
