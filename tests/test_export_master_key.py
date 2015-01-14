@@ -48,9 +48,13 @@ class GnuPGHomeCreator(object):
         self.workdir = os.path.join(self.temp_dir, 'work')
         self.gnupg_home = os.path.join(self.temp_dir, 'gnupghome')
         self._old_env = os.environ.copy()
+        self._old_cwd = os.getcwd()
         os.environ['GNUPGHOME'] = self.gnupg_home
+        os.mkdir(self.workdir)
+        os.chdir(self.workdir)
 
     def tear_down(self):
+        os.chdir(self._old_cwd)
         if os.path.exists(self.temp_dir):
             shutil.rmtree(self.temp_dir)
         os.environ.clear()
