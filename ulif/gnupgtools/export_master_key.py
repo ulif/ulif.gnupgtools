@@ -153,7 +153,8 @@ def input_key(max_key):
 def execute(cmd_list):
     """Execute the command in `cmd_list`.
 
-    Returns (stdout, stderr) output.
+    `cmd_list` must be a list of arguments as entered, for instance,
+    on the shell.  Returns (stdout, stderr) output.
     """
     proc = subprocess.Popen(
         cmd_list, stdout=subprocess.PIPE, shell=False)
