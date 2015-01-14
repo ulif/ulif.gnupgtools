@@ -1,11 +1,13 @@
 import os
 import pytest
 import shutil
+import stat
+import tarfile
 import tempfile
 import ulif.gnupgtools.export_master_key
 from ulif.gnupgtools.export_master_key import (
     main, greeting, VERSION, get_secret_keys_output, get_key_list,
-    export_keys, input_key, RE_HEX_NUMBER,
+    export_keys, input_key, RE_HEX_NUMBER, create_tarfile
     )
 
 try:
@@ -136,6 +138,25 @@ class TestExportMasterKeyModule(object):
         assert not RE_HEX_NUMBER.match('b"01234"')
         assert not RE_HEX_NUMBER.match('not-a-hex-num')
         assert not RE_HEX_NUMBER.match('')
+
+    def test_create_tarfile(self, work_dir_creator):
+        # we can create tarfiles
+        create_tarfile(
+            'sample.tar',
+            {
+                'file1': b'content1',
+                'file2': b'content2',
+                })
+        assert tarfile.is_tarfile('sample.tar')
+        tar = tarfile.open('sample.tar', 'r')
+        tar.extractall()
+        assert sorted(os.listdir(".")) == ['file1', 'file2', 'sample.tar']
+        assert open('file1', 'r').read() == 'content1'
+        assert open('file2', 'r').read() == 'content2'
+        expected_perm = stat.S_IRUSR | stat.S_IWUSR  # ~ rw-------
+        assert stat.S_IMODE(os.stat('file1').st_mode) == expected_perm
+        assert stat.S_IMODE(os.stat('file2').st_mode) == expected_perm
+        assert stat.S_IMODE(os.stat('sample.tar').st_mode) == expected_perm
 
     def test_main_exists(self):
         # the main function exists

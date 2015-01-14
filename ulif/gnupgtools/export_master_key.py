@@ -15,7 +15,10 @@ import pkg_resources
 import re
 import subprocess
 import sys
+import tarfile
 import tempfile
+import time
+from io import BytesIO
 
 
 RE_HEX_NUMBER = re.compile('(^[a-f0-9]+)$|(^[A-F0-9]+$)')
@@ -51,6 +54,29 @@ def s(text):
     if not isinstance(text, str):
         text = text.decode('utf-8')
     return text
+
+
+def create_tarfile(archive_name, members_dict):
+    """Create a tar archive.
+
+    The archive will be created as `archive_name`. `members_dict`
+    should contain names (keys) and file contents (values).
+
+    Currently we support only one level of files.
+
+    All files are stored with user perms set only (no group or other
+    permissions.)
+    """
+    tar = tarfile.TarFile(name=archive_name, mode="w")
+    os.chmod(archive_name, 384)  # ~ octal 0600 ~ rw-------
+    for name, content in members_dict.items():
+        info = tarfile.TarInfo(name=name)
+        info.mode = 384          # ~ octal 0600 = rw-------
+        info.mtime = time.time()
+        info.size = len(content)
+        tar.addfile(tarinfo=info, fileobj=BytesIO(content))
+    tar.close()
+    os.chmod(archive_name, 384)
 
 
 def greeting():
