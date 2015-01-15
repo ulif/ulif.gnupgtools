@@ -1,4 +1,6 @@
+import grp
 import os
+import pwd
 import pytest
 import shutil
 import stat
@@ -142,21 +144,40 @@ class TestExportMasterKeyModule(object):
     def test_create_tarfile(self, work_dir_creator):
         # we can create tarfiles
         create_tarfile(
-            'sample.tar',
+            'sample.tar.gz',
             {
                 'file1': b'content1',
                 'file2': b'content2',
                 })
-        assert tarfile.is_tarfile('sample.tar')
-        tar = tarfile.open('sample.tar', 'r')
+        assert tarfile.is_tarfile('sample.tar.gz')
+        tar = tarfile.open('sample.tar.gz', 'r:gz')
         tar.extractall()
-        assert sorted(os.listdir(".")) == ['file1', 'file2', 'sample.tar']
+        assert sorted(os.listdir(".")) == ['file1', 'file2', 'sample.tar.gz']
         assert open('file1', 'r').read() == 'content1'
         assert open('file2', 'r').read() == 'content2'
         expected_perm = stat.S_IRUSR | stat.S_IWUSR  # ~ rw-------
         assert stat.S_IMODE(os.stat('file1').st_mode) == expected_perm
         assert stat.S_IMODE(os.stat('file2').st_mode) == expected_perm
-        assert stat.S_IMODE(os.stat('sample.tar').st_mode) == expected_perm
+        assert stat.S_IMODE(os.stat('sample.tar.gz').st_mode) == expected_perm
+
+    def test_create_tarfile_ids(self, work_dir_creator):
+        # when creating tarfiles, uids and gids are set properly
+        create_tarfile(
+            'sample.tar.gz',
+            {
+                'file1': b'content1',
+                'file2': b'content2',
+                })
+        assert tarfile.is_tarfile('sample.tar.gz')
+        tar = tarfile.open('sample.tar.gz', 'r:gz')
+        members = tar.getmembers()
+        assert members[0].uid == os.getuid()
+        assert members[1].uid == os.getuid()
+        assert members[0].gid == os.getgid()
+        assert members[1].gid == os.getgid()
+        assert members[0].uname == pwd.getpwuid(os.getuid()).pw_name
+        assert members[0].gname == grp.getgrgid(os.getgid()).gr_name
+
 
     def test_main_exists(self):
         # the main function exists
