@@ -178,7 +178,6 @@ class TestExportMasterKeyModule(object):
         assert members[0].uname == pwd.getpwuid(os.getuid()).pw_name
         assert members[0].gname == grp.getgrgid(os.getgid()).gr_name
 
-
     def test_main_exists(self):
         # the main function exists
         assert main is not None
