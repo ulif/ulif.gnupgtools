@@ -204,7 +204,6 @@ def export_keys(hex_id):
     hex_id = str(hex_id)
     if not RE_HEX_NUMBER.match(hex_id):
         raise ValueError('Not a valid hex number: %s' % hex_id)
-    #tmp_dir = tempfile.mkdtemp()
     pub_path = "%s.pub" % hex_id
     priv_path = "%s.priv" % hex_id
     subs_path = "%s.subkeys" % hex_id
