@@ -226,8 +226,7 @@ def export_keys(hex_id):
             priv_path: priv_file,
             subs_path: subs_file}
         )
-    print()
-    print("All export files written to %s." % (tar_path))
+    print("\nAll export files written to: %s." % (tar_path))
     return tar_path
 
 
