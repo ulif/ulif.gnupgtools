@@ -51,14 +51,12 @@ Create an export of a secret master key::
         b'Gnupg Testuser (no real person) <gnupg@example.org>'
         b'Gnupg Testuser (Other Identity) <gnupg@example.org>'
   Which key do you want to export? (1..2; q to quit): 1
-  Picked key:  1 DAA011C5
-  Exported public key to: /.../DAA011C5.pub
-  Exported secret keys to: /.../DAA011C5.priv
-  Exported subkeys belonging to this key to: /.../DAA011C5.subkeys
-  Copy these three files to your not-so-secure machine and
-  import them (`gpg --import DAA011C5.pub DAA011C5.priv`).
+  Picked key: 1 (DAA011C5)
+  Extract public keys to: DAA011C5.pub
+  Extract secret keys to: DAA011C5.priv
+  Extract subkeys belonging to this key to: DAA011C5.subkeys
 
-  All export files written to directory /....
+  All export files written to: /.../DAA011C5.tar.gz.
 
 
 Install
