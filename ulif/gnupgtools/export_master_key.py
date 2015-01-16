@@ -19,7 +19,6 @@ import stat
 import subprocess
 import sys
 import tarfile
-import tempfile
 import time
 from io import BytesIO
 
@@ -205,37 +204,33 @@ def export_keys(hex_id):
     hex_id = str(hex_id)
     if not RE_HEX_NUMBER.match(hex_id):
         raise ValueError('Not a valid hex number: %s' % hex_id)
-    tmp_dir = tempfile.mkdtemp()
-    pub_path = os.path.join(tmp_dir, "%s.pub" % hex_id)
-    priv_path = os.path.join(tmp_dir, "%s.priv" % hex_id)
-    subs_path = os.path.join(tmp_dir, "%s.subkeys" % hex_id)
+    #tmp_dir = tempfile.mkdtemp()
+    pub_path = "%s.pub" % hex_id
+    priv_path = "%s.priv" % hex_id
+    subs_path = "%s.subkeys" % hex_id
+    tar_path = os.path.join(os.getcwd(), "%s.tar.gz" % hex_id)
 
-    execute(
-        ["gpg", "--export", "--armor", "--output", pub_path, hex_id]
+    pub_file, err = execute(["gpg", "--export", "--armor", hex_id])
+    print("Extract public keys to: %s" % (pub_path, ))
+
+    priv_file, err = execute(
+        ["gpg", "--export-secret-keys", "--armor", hex_id])
+    print("Extract secret keys to: %s" % (priv_path))
+
+    subs_file, err = execute(
+        ["gpg", "--export-secret-subkeys", "--armor", hex_id])
+    print("Extract subkeys belonging to this key to: %s" % (subs_path))
+
+    create_tarfile(
+        tar_path,
+        {
+            pub_path: pub_file,
+            priv_path: priv_file,
+            subs_path: subs_file}
         )
-    print("Exported public key to: %s" % (pub_path, ))
-
-    execute(
-        ["gpg", "--export-secret-keys", "--armor",
-         "--output", priv_path, hex_id]
-        )
-    print("Exported secret keys to: %s" % (priv_path))
-
-    execute(
-        ["gpg", "--export-secret-subkeys", "--armor",
-         "--output", subs_path, hex_id]
-        )
-    print("Exported subkeys belonging to this key to: %s" % (subs_path))
-
-    print(
-        "Copy these three files to your not-so-secure machine and"
-        "import them (`gpg --import %s.pub %s.priv`)." % (
-            hex_id, hex_id)
-        )
-
     print()
-    print("All export files written to directory %s." % (tmp_dir))
-    return tmp_dir
+    print("All export files written to %s." % (tar_path))
+    return tar_path
 
 
 def main():

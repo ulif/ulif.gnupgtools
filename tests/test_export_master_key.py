@@ -227,14 +227,16 @@ class TestExportMasterKeyModule(object):
     def test_export_keys(self, gnupg_home_creator):
         # we can export a certain, existing key
         gnupg_home_creator.create_sample_gnupg_home('two-users')
-        result_dir = export_keys('DAA011C5')
-        assert os.path.isdir(result_dir)
-        assert sorted(os.listdir(result_dir)) == [
-            'DAA011C5.priv', 'DAA011C5.pub', 'DAA011C5.subkeys']
-        priv_file_path = os.path.join(result_dir, 'DAA011C5.priv')
-        file_size = os.path.getsize(priv_file_path)
-        assert file_size > 0
-        shutil.rmtree(result_dir)  # clean up
+        result_path = export_keys('DAA011C5')
+        assert os.path.isfile(result_path)
+        assert os.path.basename(result_path) == 'DAA011C5.tar.gz'
+        assert tarfile.is_tarfile(result_path)
+        tar = tarfile.open(result_path, 'r:gz')
+        members = tar.getmembers()
+        priv_key_info = [
+            x for x in members if x.name == 'DAA011C5.priv'][0]
+        assert priv_key_info.size > 0
+        return
 
     def test_export_keys_requires_valid_hex_num(self, gnupg_home_creator):
         with pytest.raises(ValueError) as exc_info:
@@ -245,12 +247,13 @@ class TestExportMasterKeyModule(object):
         # we can export keys via the main() function
         gnupg_home_creator.create_sample_gnupg_home('two-users')
         mock_input.fake_input_values = ["1"]
-        result_dir = main()
+        result_path = main()
         out, err = capsys.readouterr()
-        assert os.path.isdir(result_dir)
-        assert sorted(os.listdir(result_dir)) == [
+        assert os.path.exists(result_path)
+        assert result_path.startswith(gnupg_home_creator.workdir)
+        assert tarfile.is_tarfile(result_path)
+        tar = tarfile.open(result_path, 'r:gz')
+        members = tar.getmembers()
+        assert sorted([x.name for x in members]) == [
             'DAA011C5.priv', 'DAA011C5.pub', 'DAA011C5.subkeys']
-        priv_file_path = os.path.join(result_dir, 'DAA011C5.priv')
-        file_size = os.path.getsize(priv_file_path)
-        assert file_size > 0
-        shutil.rmtree(result_dir)  # clean up
+        assert 0 not in [x.size for x in members]
