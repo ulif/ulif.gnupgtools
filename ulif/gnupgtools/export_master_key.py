@@ -242,6 +242,6 @@ def main():
     entry_num = input_key(max_key)
 
     picked_hex_id = key_list[entry_num - 1][2]
-    print("Picked key: ", entry_num, key_list[entry_num - 1][2])
+    print("Picked key: %s (%s)" % (entry_num, key_list[entry_num - 1][2]))
 
     return export_keys(picked_hex_id)
