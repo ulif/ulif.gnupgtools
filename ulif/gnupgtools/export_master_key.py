@@ -192,7 +192,6 @@ def execute(cmd_list):
     proc = subprocess.Popen(
         cmd_list, stdout=subprocess.PIPE, shell=False)
     output, err = proc.communicate()
-    print(err)
     return output, err
 
 
