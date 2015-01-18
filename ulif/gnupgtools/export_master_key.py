@@ -234,6 +234,9 @@ def main():
     greeting()
     key_list = get_key_list()
     print("Locally available keys (with secret parts available):")
+    if len(key_list) == 0:
+        print("No keys found. Exiting.")
+        return
     output_key_list(key_list)
     max_key = len(key_list)
     entry_num = input_key(max_key)

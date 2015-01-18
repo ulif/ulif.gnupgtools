@@ -257,3 +257,11 @@ class TestExportMasterKeyModule(object):
         assert sorted([x.name for x in members]) == [
             'DAA011C5.priv', 'DAA011C5.pub', 'DAA011C5.subkeys']
         assert 0 not in [x.size for x in members]
+
+    def test_main_empty(self, gnupg_home_creator, capsys):
+        # we cope with empty gnupg homes
+        gnupg_home_creator.create_sample_gnupg_home('empty')
+        result = main()
+        out, err = capsys.readouterr()
+        assert result is None
+        assert "No keys found. Exiting." in out
