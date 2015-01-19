@@ -10,6 +10,7 @@
 #
 # *Before* running this script you must create additional subkeys.
 #
+import argparse
 import grp
 import os
 import pkg_resources
@@ -84,6 +85,14 @@ def create_tarfile(archive_name, members_dict):
         info.gname = grp.getgrgid(os.getgid()).gr_name
         tar.addfile(tarinfo=info, fileobj=BytesIO(content))
     tar.close()
+
+
+def handle_options(args):
+    """Handle commandline options.
+    """
+    parser = argparse.ArgumentParser(description="Export GnuPG master key")
+    args = parser.parse_args(args)
+    return args
 
 
 def greeting():
@@ -230,7 +239,8 @@ def export_keys(hex_id):
     return tar_path
 
 
-def main():
+def main(args=sys.argv):
+    handle_options(args[1:])
     greeting()
     key_list = get_key_list()
     print("Locally available keys (with secret parts available):")

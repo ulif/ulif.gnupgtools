@@ -4,6 +4,7 @@ import pwd
 import pytest
 import shutil
 import stat
+import sys
 import tarfile
 import tempfile
 import ulif.gnupgtools.export_master_key
@@ -247,7 +248,7 @@ class TestExportMasterKeyModule(object):
         # we can export keys via the main() function
         gnupg_home_creator.create_sample_gnupg_home('two-users')
         mock_input.fake_input_values = ["1"]
-        result_path = main()
+        result_path = main(['gpg-export-master-key', ])
         out, err = capsys.readouterr()
         assert os.path.exists(result_path)
         assert result_path.startswith(gnupg_home_creator.workdir)
@@ -261,7 +262,24 @@ class TestExportMasterKeyModule(object):
     def test_main_empty(self, gnupg_home_creator, capsys):
         # we cope with empty gnupg homes
         gnupg_home_creator.create_sample_gnupg_home('empty')
-        result = main()
+        result = main(['gpg-export-master-key', ])
         out, err = capsys.readouterr()
         assert result is None
         assert "No keys found. Exiting." in out
+
+    def test_help(self, gnupg_home_creator, capsys):
+        # we can get help
+        with pytest.raises(SystemExit) as exc_info:
+            main(["gpg-export-master-key", "--help"])
+        assert exc_info.value.code == 0
+        out, err = capsys.readouterr()
+        out = out.replace(
+            os.path.basename(sys.argv[0]), 'gpg-export-master-key')
+        assert out == (
+            'usage: gpg-export-master-key [-h]\n'
+            '\n'
+            'Export GnuPG master key\n'
+            '\n'
+            'optional arguments:\n'
+            '  -h, --help  show this help message and exit\n'
+            )
