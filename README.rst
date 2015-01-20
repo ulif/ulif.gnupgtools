@@ -41,7 +41,7 @@ Examples
 Create an export of a secret master key::
 
   $ gpg-export-master-key
-  gpg-export-master-key.py 0.1.dev0; Copyright (C) 2014 Uli Fouquet.
+  gpg-export-master-key 0.1.dev0; Copyright (C) 2014 Uli Fouquet.
   This is free software: you are free to change and redistribute it.
   There is NO WARRANTY, to the extent permitted by law.
   Locally available keys (with secret parts available):
