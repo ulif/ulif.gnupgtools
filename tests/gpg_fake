@@ -1,0 +1,9 @@
+#!%s
+
+output = """
+sec   4096R/00000000 2014-05-23
+uid                  Ferdinand Fake <ferdi@fake.org>
+ssb   4096R/FFFFFFFF 2014-05-23
+"""
+
+print(output)
