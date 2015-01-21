@@ -108,19 +108,19 @@ def greeting():
         )
 
 
-def get_secret_keys_output():
+def get_secret_keys_output(gnupg_path='gpg'):
     """Get a list of all secret keys as output by GPG.
     """
-    proc = subprocess.Popen(["gpg", "-K"], stdout=subprocess.PIPE,
+    proc = subprocess.Popen([gnupg_path, "-K"], stdout=subprocess.PIPE,
                             shell=False)
     output, err = proc.communicate()
     return output, err
 
 
-def get_key_list():
+def get_key_list(gnupg_path='gpg'):
     """Parse gpg output to create a list of secret keys.
     """
-    output, err = get_secret_keys_output()
+    output, err = get_secret_keys_output(gnupg_path=gnupg_path)
     key_list = []
     curr_key = None
     curr_ids = []
@@ -242,9 +242,9 @@ def export_keys(hex_id):
 
 
 def main(args=sys.argv):
-    handle_options(args[1:])
+    options = handle_options(args[1:])
     greeting()
-    key_list = get_key_list()
+    key_list = get_key_list(gnupg_path=options.gnupg_path)
     print("Locally available keys (with secret parts available):")
     if len(key_list) == 0:
         print("No keys found. Exiting.")
