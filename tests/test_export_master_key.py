@@ -96,6 +96,44 @@ def gnupg_home_creator(request):
     return creator
 
 
+class FakeGnuPGBinary(object):
+    """Creates/removes a fake GPG binary.
+
+    Installs (and removes) an executable script that produces some
+    determined output.
+
+    The script actually a copy of the `gpg_fake` Python script in the
+    local directory. The script is modified to be started with the
+    Python executable used at test time.
+
+    The one interesting part you normally need, is the `path`
+    attribute containing the path to the generated script.
+    """
+
+    def install(self):
+        """Install a `gpg_fake` script.
+        """
+        self._tmpdir = tempfile.mkdtemp()
+        template_path = os.path.join(os.path.dirname(__file__), 'gpg_fake')
+        source = open(template_path, 'r').read()
+        source = source % (sys.executable, )
+        self.path = os.path.join(self._tmpdir, 'gpg_fake')
+        open(self.path, 'w').write(source)
+        # set strict permissions on Unix
+        os.chmod(self.path, stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR)
+
+    def remove(self):
+        shutil.rmtree(self._tmpdir)
+
+
+@pytest.fixture(scope="module")
+def fake_gpg_binary(request):
+    fake_binary = FakeGnuPGBinary()
+    request.addfinalizer(fake_binary.remove)
+    fake_binary.install()
+    return fake_binary
+
+
 class TestInputKey(object):
     # tests for input_key function
 
@@ -209,6 +247,14 @@ class TestExportMasterKeyModule(object):
             b"\n"
             )
 
+    def test_get_secret_keys_output_gpg_path(
+            self, fake_gpg_binary, gnupg_home_creator):
+        # a passed-in GnuPG path is respected
+        gnupg_home_creator.create_sample_gnupg_home('two-users')
+        out, err = get_secret_keys_output(gnupg_path=fake_gpg_binary.path)
+        assert err is None
+        assert b"Ferdinand Fake" in out
+
     def test_get_key_list(self, gnupg_home_creator):
         # we can get a list of secret keys
         gnupg_home_creator.create_sample_gnupg_home('two-users')
@@ -222,6 +268,17 @@ class TestExportMasterKeyModule(object):
                 [b'Gnupg Testuser (no real person) <gnupg@example.org>',
                  b'Gnupg Testuser (Other Identity) <gnupg@example.org>'],
                 'sec   2048R/16FD1DE8 2015-01-06', '16FD1DE8'
+                )
+            ]
+
+    def test_get_key_list_gpg_path(self, gnupg_home_creator, fake_gpg_binary):
+        # Custom GnuPG paths are respected
+        gnupg_home_creator.create_sample_gnupg_home('two-users')
+        result = get_key_list(gnupg_path=fake_gpg_binary.path)
+        assert result == [
+            (
+                ['Ferdinand Fake <ferdi@fake.org>'],
+                'sec   4096R/00000000 2014-05-23', '00000000'
                 )
             ]
 
