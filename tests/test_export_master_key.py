@@ -276,10 +276,11 @@ class TestExportMasterKeyModule(object):
         out = out.replace(
             os.path.basename(sys.argv[0]), 'gpg-export-master-key')
         assert out == (
-            'usage: gpg-export-master-key [-h]\n'
+            'usage: gpg-export-master-key [-h] [-p PATH]\n'
             '\n'
             'Export GnuPG master key\n'
             '\n'
             'optional arguments:\n'
-            '  -h, --help  show this help message and exit\n'
+            '  -h, --help            show this help message and exit\n'
+            '  -p PATH, --path PATH  Path to GnuPG binary to use\n'
             )

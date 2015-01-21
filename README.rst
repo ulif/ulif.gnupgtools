@@ -10,10 +10,13 @@ with GnuPG.
 .. |build-status| image:: https://travis-ci.org/ulif/ulif.gnupgtools.png?branch=master
 .. _build-status: https://travis-ci.org/ulif/ulif.gnupgtools
 
+Requires only Python (versions 2.6 to 3.3 supported) and GnuPG installed.
+
 The package currently provides the following commandline tools:
 
   - ``export_master_key``
-
+          Export a local master key to an archive file for import on a
+          remote machine.
 
 
 Resources
