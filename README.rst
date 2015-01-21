@@ -61,6 +61,8 @@ Create an export of a secret master key::
 
   All export files written to: /.../DAA011C5.tar.gz.
 
+Use ``gpg-export-master-key --help`` for all options.
+
 
 Install
 =======
