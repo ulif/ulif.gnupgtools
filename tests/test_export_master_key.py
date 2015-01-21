@@ -118,7 +118,8 @@ class FakeGnuPGBinary(object):
         source = open(template_path, 'r').read()
         source = source % (sys.executable, )
         self.path = os.path.join(self._tmpdir, 'gpg_fake')
-        open(self.path, 'w').write(source)
+        with open(self.path, 'w') as fd:
+            fd.write(source)
         # set strict permissions on Unix
         os.chmod(self.path, stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR)
 
@@ -277,7 +278,7 @@ class TestExportMasterKeyModule(object):
         result = get_key_list(gnupg_path=fake_gpg_binary.path)
         assert result == [
             (
-                ['Ferdinand Fake <ferdi@fake.org>'],
+                [b'Ferdinand Fake <ferdi@fake.org>'],
                 'sec   4096R/00000000 2014-05-23', '00000000'
                 )
             ]
