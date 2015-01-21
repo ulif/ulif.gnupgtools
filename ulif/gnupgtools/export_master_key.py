@@ -110,11 +110,11 @@ def greeting():
 
 def get_secret_keys_output(gnupg_path='gpg'):
     """Get a list of all secret keys as output by GPG.
+
+    Returns a tuple `(stdout, stderr)` containing output generated
+    during command runtime.
     """
-    proc = subprocess.Popen([gnupg_path, "-K"], stdout=subprocess.PIPE,
-                            shell=False)
-    output, err = proc.communicate()
-    return output, err
+    return execute([gnupg_path, "-K"])
 
 
 def get_key_list(gnupg_path='gpg'):
