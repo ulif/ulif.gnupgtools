@@ -262,12 +262,12 @@ class TestExportMasterKeyModule(object):
         result = get_key_list()
         assert result == [
             (
-                [b'Bob Tester <bob@example.org>'],
+                ['Bob Tester <bob@example.org>'],
                 'sec   2048R/DAA011C5 2015-01-06', 'DAA011C5'
                 ),
             (
-                [b'Gnupg Testuser (no real person) <gnupg@example.org>',
-                 b'Gnupg Testuser (Other Identity) <gnupg@example.org>'],
+                ['Gnupg Testuser (no real person) <gnupg@example.org>',
+                 'Gnupg Testuser (Other Identity) <gnupg@example.org>'],
                 'sec   2048R/16FD1DE8 2015-01-06', '16FD1DE8'
                 )
             ]
@@ -278,7 +278,7 @@ class TestExportMasterKeyModule(object):
         result = get_key_list(gnupg_path=fake_gpg_binary.path)
         assert result == [
             (
-                [b'Ferdinand Fake <ferdi@fake.org>'],
+                ['Ferdinand Fake <ferdi@fake.org>'],
                 'sec   4096R/00000000 2014-05-23', '00000000'
                 )
             ]
