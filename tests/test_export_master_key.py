@@ -325,6 +325,15 @@ class TestExportMasterKeyModule(object):
         assert result is None
         assert "No keys found. Exiting." in out
 
+    def test_main_option_gpg(self, gnupg_home_creator, mock_input,
+                             capsys, fake_gpg_binary,):
+        # we can set a custom gpg path
+        gnupg_home_creator.create_sample_gnupg_home('two-users')
+        mock_input.fake_input_values = ["1"]
+        main(['gpg-export-master-key', '-p', fake_gpg_binary.path])
+        out, err = capsys.readouterr()
+        assert "Ferdinand Fake <ferdi@fake.org>" in out
+
     def test_help(self, gnupg_home_creator, capsys):
         # we can get help
         with pytest.raises(SystemExit) as exc_info:
