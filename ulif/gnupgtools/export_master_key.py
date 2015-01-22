@@ -134,7 +134,7 @@ def get_key_list(gnupg_path='gpg'):
             curr_key = line.split(b"/")[1].split(b" ")[0]
         elif line.startswith(b"uid"):
             uid = line[3:].strip()
-            curr_ids.append(uid)
+            curr_ids.append(s(uid))
     if curr_key is not None:
         key_list.append((curr_ids, s(id_info), s(curr_key)))
     return sorted(key_list)
