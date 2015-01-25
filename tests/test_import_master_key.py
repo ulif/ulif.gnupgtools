@@ -78,9 +78,13 @@ class TestImportMasterKeyModule(object):
 
     def test_valid_input_invalid(self):
         # `None` is not considered a valid input file
-        assert is_valid_input_file(None) is False
+        assert is_valid_input_file(None) == (
+            False, 'no such file')
         # empty strings cannot be a valid path
-        assert is_valid_input_file('') is False
+        assert is_valid_input_file('') == (
+            False, 'no such file')
         # not existing files are detected
-        assert is_valid_input_file('/PrObAbLyNoTeXiStInG') is False
-        assert is_valid_input_file('/foo/bar/baz') is False
+        assert is_valid_input_file('/PrObAbLyNoTeXiStInG') == (
+            False, 'no such file')
+        assert is_valid_input_file('/foo/bar/baz') == (
+            False, 'no such file')
