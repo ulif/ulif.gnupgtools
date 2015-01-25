@@ -4,6 +4,13 @@ import sys
 from ulif.gnupgtools.import_master_key import handle_options, main
 
 
+def normalize_bin_path(text):
+    """Replace binary path in `text` with 'gpg-import-master-key'.
+    """
+    return text.replace(
+        os.path.basename(sys.argv[0]), 'gpg-import-master-key')
+
+
 class TestArgParser(object):
 
     def test_file(self):
@@ -16,8 +23,7 @@ class TestArgParser(object):
         with pytest.raises(SystemExit) as exc_info:
             handle_options([])
         out, err = capsys.readouterr()
-        err = err.replace(
-            os.path.basename(sys.argv[0]), 'gpg-import-master-key')
+        err = normalize_bin_path(err)
         assert exc_info.value.code != 0  # signal an error to outside
         assert (
             ('following arguments are required: FILE' in err)
@@ -29,8 +35,7 @@ class TestArgParser(object):
         with pytest.raises(SystemExit) as exc_info:
             handle_options(['foo', '--help'])
         out, err = capsys.readouterr()
-        out = out.replace(
-            os.path.basename(sys.argv[0]), 'gpg-import-master-key')
+        out = normalize_bin_path(out)
         assert exc_info.value.code == 0
         assert out == (
             "usage: gpg-import-master-key [-h] [-p PATH] FILE\n"
@@ -54,8 +59,7 @@ class TestImportMasterKeyModule(object):
             main(["gpg-import-master-key", "--help"])
         assert exc_info.value.code == 0
         out, err = capsys.readouterr()
-        out = out.replace(
-            os.path.basename(sys.argv[0]), 'gpg-import-master-key')
+        out = normalize_bin_path(out)
         assert out == (
             'usage: gpg-import-master-key [-h] [-p PATH] FILE\n'
             '\n'
