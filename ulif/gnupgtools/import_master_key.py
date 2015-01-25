@@ -23,6 +23,7 @@
 import argparse
 import os
 import sys
+import tarfile
 
 
 def handle_options(args):
@@ -52,6 +53,9 @@ def is_valid_input_file(path):
     path = os.path.abspath(path)
     if not os.path.exists(path):
         return (False, 'no such file')
+    if not tarfile.is_tarfile(path):
+        return (False, 'not a tar archive')
+    return True
 
 
 def main(args=sys.argv):

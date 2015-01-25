@@ -76,7 +76,7 @@ class TestImportMasterKeyModule(object):
             '  -p PATH, --path PATH  Path to GnuPG binary to use\n'
             )
 
-    def test_valid_input_invalid(self):
+    def test_valid_input_not_a_file(self):
         # `None` is not considered a valid input file
         assert is_valid_input_file(None) == (
             False, 'no such file')
@@ -88,3 +88,11 @@ class TestImportMasterKeyModule(object):
             False, 'no such file')
         assert is_valid_input_file('/foo/bar/baz') == (
             False, 'no such file')
+
+    def test_valid_input_not_an_archive(self, work_dir_creator):
+        # we can detect whether input files are tar archives
+        sample_path = os.path.join(work_dir_creator.workdir, 'sample')
+        with open(sample_path, 'w') as fd:
+            fd.write('not-a-tar-gz-archive')
+        assert is_valid_input_file(sample_path) == (
+            False, 'not a tar archive')
