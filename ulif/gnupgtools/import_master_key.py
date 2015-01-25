@@ -21,6 +21,7 @@
  subkeys (private and public parts) bound to this key.
 """
 import argparse
+import os
 import sys
 
 
@@ -34,6 +35,15 @@ def handle_options(args):
                         metavar='PATH', help='Path to GnuPG binary to use')
     opts = parser.parse_args(args)
     return opts
+
+def is_valid_input_file(path):
+    """Detect whether `path` leads to a valid input file.
+    """
+    if not path:
+        return False
+    path = os.path.abspath(path)
+    if not os.path.exists(path):
+        return False
 
 
 def main(args=sys.argv):

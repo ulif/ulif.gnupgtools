@@ -1,7 +1,9 @@
 import os
 import pytest
 import sys
-from ulif.gnupgtools.import_master_key import handle_options, main
+from ulif.gnupgtools.import_master_key import (
+    handle_options, main, is_valid_input_file,
+    )
 
 
 def normalize_bin_path(text):
@@ -73,3 +75,12 @@ class TestImportMasterKeyModule(object):
             '  -h, --help            show this help message and exit\n'
             '  -p PATH, --path PATH  Path to GnuPG binary to use\n'
             )
+
+    def test_valid_input_invalid(self):
+        # `None` is not considered a valid input file
+        assert is_valid_input_file(None) is False
+        # empty strings cannot be a valid path
+        assert is_valid_input_file('') is False
+        # not existing files are detected
+        assert is_valid_input_file('/PrObAbLyNoTeXiStInG') is False
+        assert is_valid_input_file('/foo/bar/baz') is False
