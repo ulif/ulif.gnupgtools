@@ -26,7 +26,10 @@ class TestArgParser(object):
             handle_options([])
         out, err = capsys.readouterr()
         err = normalize_bin_path(err)
-        assert exc_info.value.code != 0  # signal an error to outside
+        if isinstance(exc_info.value, int):
+            assert exc_info.value is not 0  # Python 2.6
+        else:
+            assert exc_info.value.code != 0
         assert (
             ('following arguments are required: FILE' in err)
             or ('too few arguments' in err)
@@ -103,7 +106,10 @@ class TestImportMasterKeyModule(object):
         # we do not accept invalid input archives
         with pytest.raises(SystemExit) as exc_info:
             main(['gpg-import-master-key', '/invalid-path'])
-        assert exc_info.value.code != 0
+        if isinstance(exc_info.value, int):
+            assert exc_info.value is not 0  # Python 2.6
+        else:
+            assert exc_info.value.code != 0
         out, err = capsys.readouterr()
         err = normalize_bin_path(err)
         assert err == 'Not a valid master key archive: /invalid-path\n'
