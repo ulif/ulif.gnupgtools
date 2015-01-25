@@ -28,6 +28,8 @@ def handle_options(args):
     """Handle commandline options.
     """
     parser = argparse.ArgumentParser(description="Import GnuPG master key")
+    parser.add_argument('infile', metavar='FILE',
+                        help='tar.gz file created by gpg-export-master-key.')
     parser.add_argument('-p', '--path', dest="gnupg_path", default='gpg',
                         metavar='PATH', help='Path to GnuPG binary to use')
     opts = parser.parse_args(args)
