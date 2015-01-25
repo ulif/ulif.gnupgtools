@@ -40,22 +40,15 @@ def handle_options(args):
 
 def is_valid_input_file(path):
     """Detect whether `path` leads to a valid input file.
-
-    Returns a status and a textual reason: `(<bool>, <string>)`. If
-    things are okay (path is valid), the reason is empty.
-
-       >>> is_valid_input_file('/not-valid')
-       (False, 'no such file')
-
     """
     if not path:
-        return (False, 'no such file')
+        return False
     path = os.path.abspath(path)
     if not os.path.exists(path):
-        return (False, 'no such file')
+        return False
     if not tarfile.is_tarfile(path):
-        return (False, 'not a tar archive')
-    return (True, None)
+        return False
+    return True
 
 
 def main(args=sys.argv):

@@ -78,28 +78,23 @@ class TestImportMasterKeyModule(object):
 
     def test_valid_input_not_a_file(self):
         # `None` is not considered a valid input file
-        assert is_valid_input_file(None) == (
-            False, 'no such file')
+        assert is_valid_input_file(None) is False
         # empty strings cannot be a valid path
-        assert is_valid_input_file('') == (
-            False, 'no such file')
+        assert is_valid_input_file('') is False
         # not existing files are detected
-        assert is_valid_input_file('/PrObAbLyNoTeXiStInG') == (
-            False, 'no such file')
-        assert is_valid_input_file('/foo/bar/baz') == (
-            False, 'no such file')
+        assert is_valid_input_file('/PrObAbLyNoTeXiStInG') is False
+        assert is_valid_input_file('/foo/bar/baz') is False
 
     def test_valid_input_not_an_archive(self, work_dir_creator):
         # we can detect whether input files are tar archives
         sample_path = os.path.join(work_dir_creator.workdir, 'sample')
         with open(sample_path, 'w') as fd:
             fd.write('not-a-tar-gz-archive')
-        assert is_valid_input_file(sample_path) == (
-            False, 'not a tar archive')
+        assert is_valid_input_file(sample_path) is False
 
     def test_valid_input(self, work_dir_creator):
         # any valid tar archive is accepted
         sample_path = os.path.join(
             os.path.dirname(__file__), 'export-samples',
             'DAA011C5.tar.gz')
-        assert is_valid_input_file(sample_path) == (True, None)
+        assert is_valid_input_file(sample_path) is True
