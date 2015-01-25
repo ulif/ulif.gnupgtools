@@ -3,6 +3,7 @@ import pytest
 import sys
 from ulif.gnupgtools.import_master_key import handle_options, main
 
+
 class TestArgParser(object):
 
     def test_file(self):
@@ -13,7 +14,7 @@ class TestArgParser(object):
     def test_file_required(self, capsys):
         # we require an input file
         with pytest.raises(SystemExit) as exc_info:
-            handle_options([ ])
+            handle_options([])
         out, err = capsys.readouterr()
         err = err.replace(
             os.path.basename(sys.argv[0]), 'gpg-import-master-key')
@@ -30,6 +31,7 @@ class TestArgParser(object):
         out, err = capsys.readouterr()
         out = out.replace(
             os.path.basename(sys.argv[0]), 'gpg-import-master-key')
+        assert exc_info.value.code == 0
         assert out == (
             "usage: gpg-import-master-key [-h] [-p PATH] FILE\n"
             "\n"
@@ -42,6 +44,7 @@ class TestArgParser(object):
             "  -h, --help            show this help message and exit\n"
             "  -p PATH, --path PATH  Path to GnuPG binary to use\n"
             )
+
 
 class TestImportMasterKeyModule(object):
 
