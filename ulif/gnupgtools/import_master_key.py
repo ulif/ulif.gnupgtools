@@ -36,6 +36,7 @@ def handle_options(args):
     opts = parser.parse_args(args)
     return opts
 
+
 def is_valid_input_file(path):
     """Detect whether `path` leads to a valid input file.
     """
