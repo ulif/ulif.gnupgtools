@@ -98,3 +98,12 @@ class TestImportMasterKeyModule(object):
             os.path.dirname(__file__), 'export-samples',
             'DAA011C5.tar.gz')
         assert is_valid_input_file(sample_path) is True
+
+    def test_main_invalid_input(self, capsys):
+        # we do not accept invalid input archives
+        with pytest.raises(SystemExit) as exc_info:
+            main(['gpg-import-master-key', '/invalid-path'])
+        assert exc_info.value.code != 0
+        out, err = capsys.readouterr()
+        err = normalize_bin_path(err)
+        assert err == 'Not a valid master key archive: /invalid-path\n'

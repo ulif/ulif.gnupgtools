@@ -20,6 +20,7 @@
  Imports all public and secret keys of a chosen primary keypair, including
  subkeys (private and public parts) bound to this key.
 """
+from __future__ import print_function
 import argparse
 import os
 import sys
@@ -53,3 +54,7 @@ def is_valid_input_file(path):
 
 def main(args=sys.argv):
     options = handle_options(args[1:])
+    if not is_valid_input_file(options.infile):
+        print("Not a valid master key archive: %s" % options.infile,
+              file=sys.stderr)
+        sys.exit(2)
