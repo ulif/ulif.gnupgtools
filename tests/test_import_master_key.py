@@ -96,3 +96,10 @@ class TestImportMasterKeyModule(object):
             fd.write('not-a-tar-gz-archive')
         assert is_valid_input_file(sample_path) == (
             False, 'not a tar archive')
+
+    def test_valid_input(self, work_dir_creator):
+        # any valid tar archive is accepted
+        sample_path = os.path.join(
+            os.path.dirname(__file__), 'export-samples',
+            'DAA011C5.tar.gz')
+        assert is_valid_input_file(sample_path) == (True, None)

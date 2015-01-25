@@ -55,7 +55,7 @@ def is_valid_input_file(path):
         return (False, 'no such file')
     if not tarfile.is_tarfile(path):
         return (False, 'not a tar archive')
-    return True
+    return (True, None)
 
 
 def main(args=sys.argv):
