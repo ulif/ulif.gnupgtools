@@ -188,9 +188,8 @@ class TestExportMasterKeyModule(object):
         gnupg_home_creator.create_sample_gnupg_home('one-secret')
         out, err = get_secret_keys_output()
         assert err is None
-        assert out[-198:] == (
-            b"/gnupghome/secring.gpg\n"
-            b"------------------------------------\n"
+        assert out[-161:] == (
+            b"----------------------\n"
             b"sec   2048R/16FD1DE8 2015-01-06\n"
             b"uid                  Gnupg Testuser (no real person) "
             b"<gnupg@example.org>\n"
