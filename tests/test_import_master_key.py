@@ -49,7 +49,7 @@ class TestArgParser(object):
             '\n'
             'positional arguments:\n'
             '  FILE                  tar.gz file created by '
-                                    'gpg-export-master-key.\n'
+            'gpg-export-master-key.\n'
             "\noptional arguments:\n"
             "  -h, --help            show this help message and exit\n"
             "  -p PATH, --path PATH  Path to GnuPG binary to use\n"
@@ -72,7 +72,7 @@ class TestImportMasterKeyModule(object):
             '\n'
             'positional arguments:\n'
             '  FILE                  tar.gz file created by '
-                                    'gpg-export-master-key.\n'
+            'gpg-export-master-key.\n'
             '\n'
             'optional arguments:\n'
             '  -h, --help            show this help message and exit\n'
