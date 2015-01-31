@@ -71,7 +71,7 @@ def extract_archive(path):
             if not info.isfile():
                 continue  # ignore non-regular files
             ext = os.path.splitext(info.name)[1]
-            if not ext in ('.subkeys', '.priv', '.pub'):
+            if ext not in ('.subkeys', '.priv', '.pub'):
                 continue  # ignore files with unwanted filename extension
             result[info.name] = tar.extractfile(info).read()
     return result
