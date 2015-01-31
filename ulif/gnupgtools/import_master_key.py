@@ -54,6 +54,16 @@ def is_valid_input_file(path):
 
 def extract_archive(path):
     """Turn tar archive at `path` into a dict.
+
+    A few rules for archive files we accept:
+
+    - File format must be ``.tar.gz``.
+    - Only members with filename extension '.subkeys' | '.pub' | '.priv'
+      are extracted.
+    - Only regular files are extracted (no dirs, etc.)
+
+    The archive is returned as a dict with member names as keys and
+    file contents as value.
     """
     result = dict()
     with tarfile.open(path, "r:gz") as tar:
