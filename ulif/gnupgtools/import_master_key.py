@@ -52,6 +52,21 @@ def is_valid_input_file(path):
     return True
 
 
+def extract_archive(path):
+    """Turn tar archive at `path` into a dict.
+    """
+    result = dict()
+    with tarfile.open(path, "r:gz") as tar:
+        for info in tar.getmembers():
+            if not info.isfile():
+                continue  # ignore non-regular files
+            ext = os.path.splitext(info.name)[1]
+            if not ext in ('.subkeys', '.priv', '.pub'):
+                continue  # ignore files with unwanted filename extension
+            result[info.name] = tar.extractfile(info).read()
+    return result
+
+
 def main(args=sys.argv):
     options = handle_options(args[1:])
     if not is_valid_input_file(options.infile):

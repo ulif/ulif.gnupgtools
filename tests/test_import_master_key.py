@@ -1,8 +1,9 @@
 import os
 import pytest
+import shutil
 import sys
 from ulif.gnupgtools.import_master_key import (
-    handle_options, main, is_valid_input_file,
+    handle_options, main, is_valid_input_file, extract_archive,
     )
 
 
@@ -95,12 +96,27 @@ class TestImportMasterKeyModule(object):
             fd.write('not-a-tar-gz-archive')
         assert is_valid_input_file(sample_path) is False
 
-    def test_valid_input(self, work_dir_creator):
+    def test_valid_input(self):
         # any valid tar archive is accepted
         sample_path = os.path.join(
             os.path.dirname(__file__), 'export-samples',
             'DAA011C5.tar.gz')
         assert is_valid_input_file(sample_path) is True
+
+    def test_extract_archive(self, work_dir_creator):
+        # we can extract archives
+        src_path = os.path.join(
+            os.path.dirname(__file__), 'export-samples',
+            'DAA011C5.tar.gz')
+        dest_path = os.path.join(
+            work_dir_creator.workdir, 'sample.tar.gz')
+        shutil.copy2(src_path, dest_path)
+        result = extract_archive(dest_path)
+        assert isinstance(result, dict)
+        assert sorted(result.keys()) == [
+            'DAA011C5.priv', 'DAA011C5.pub', 'DAA011C5.subkeys']
+        assert result['DAA011C5.pub'].startswith(
+            b'-----BEGIN PGP PUBLIC KEY BLOCK-----\n')
 
     def test_main_invalid_input(self, capsys):
         # we do not accept invalid input archives
