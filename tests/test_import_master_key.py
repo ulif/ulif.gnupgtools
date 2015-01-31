@@ -2,6 +2,7 @@ import os
 import pytest
 import shutil
 import sys
+import tarfile
 from ulif.gnupgtools.import_master_key import (
     handle_options, main, is_valid_input_file, extract_archive,
     )
@@ -117,6 +118,21 @@ class TestImportMasterKeyModule(object):
             'DAA011C5.priv', 'DAA011C5.pub', 'DAA011C5.subkeys']
         assert result['DAA011C5.pub'].startswith(
             b'-----BEGIN PGP PUBLIC KEY BLOCK-----\n')
+
+    def test_extract_archive_ignore_unwanted(self, work_dir_creator):
+        # we ignore unwanted archive members
+        path = 'sample.tgz'
+        for name in ('foo', 'bar.pub'):
+            with open(name, 'w') as fd:
+                fd.write('%s content' % name)
+        os.mkdir('foodir')
+        tar = tarfile.open(path, 'w:gz')  # no context manager with py2.6
+        for name in ('foo', 'bar.pub', 'foodir'):
+            tar.add(name)
+        tar.close()
+        result = extract_archive(path)
+        assert sorted(result.keys()) == ['bar.pub']
+        assert result['bar.pub'] == b'bar.pub content'
 
     def test_main_invalid_input(self, capsys):
         # we do not accept invalid input archives
