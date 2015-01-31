@@ -66,14 +66,15 @@ def extract_archive(path):
     file contents as value.
     """
     result = dict()
-    with tarfile.open(path, "r:gz") as tar:
-        for info in tar.getmembers():
-            if not info.isfile():
-                continue  # ignore non-regular files
-            ext = os.path.splitext(info.name)[1]
-            if ext not in ('.subkeys', '.priv', '.pub'):
-                continue  # ignore files with unwanted filename extension
-            result[info.name] = tar.extractfile(info).read()
+    tar = tarfile.open(path, "r:gz")
+    for info in tar.getmembers():
+        if not info.isfile():
+            continue  # ignore non-regular files
+        ext = os.path.splitext(info.name)[1]
+        if ext not in ('.subkeys', '.priv', '.pub'):
+            continue  # ignore files with unwanted filename extension
+        result[info.name] = tar.extractfile(info).read()
+    tar.close()
     return result
 
 
