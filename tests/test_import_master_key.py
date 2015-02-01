@@ -122,10 +122,10 @@ class TestImportMasterKeyModule(object):
     def test_extract_archive_ignore_unwanted(self, work_dir_creator):
         # we ignore unwanted archive members
         path = 'sample.tgz'
-        for name in ('foo', 'bar.pub'):
+        os.mkdir('foodir')
+        for name in ('foo', 'bar.pub', 'foodir/baz.priv'):
             with open(name, 'w') as fd:
                 fd.write('%s content' % name)
-        os.mkdir('foodir')
         tar = tarfile.open(path, 'w:gz')  # no context manager with py2.6
         for name in ('foo', 'bar.pub', 'foodir'):
             tar.add(name)
