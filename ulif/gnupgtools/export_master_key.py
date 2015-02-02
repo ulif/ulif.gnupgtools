@@ -33,7 +33,6 @@ import pkg_resources
 import pwd
 import re
 import stat
-import subprocess
 import sys
 import tarfile
 import time
