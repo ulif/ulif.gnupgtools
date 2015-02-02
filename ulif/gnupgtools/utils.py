@@ -17,3 +17,16 @@
 #
 """Helpers needed by at least two other modules.
 """
+import subprocess
+
+
+def execute(cmd_list):
+    """Execute the command in `cmd_list`.
+
+    `cmd_list` must be a list of arguments as entered, for instance,
+    on the shell.  Returns (stdout, stderr) output.
+    """
+    proc = subprocess.Popen(
+        cmd_list, stdout=subprocess.PIPE, shell=False)
+    output, err = proc.communicate()
+    return output, err

@@ -38,6 +38,7 @@ import sys
 import tarfile
 import time
 from io import BytesIO
+from ulif.gnupgtools.utils import execute
 
 #: Regular expression representing a hexadecimal number
 RE_HEX_NUMBER = re.compile('(^[a-f0-9]+)$|(^[A-F0-9]+$)')
@@ -208,18 +209,6 @@ def input_key(max_key):
         if (entry_num < 1) or (entry_num > max_key):
             entry_num = None
     return entry_num
-
-
-def execute(cmd_list):
-    """Execute the command in `cmd_list`.
-
-    `cmd_list` must be a list of arguments as entered, for instance,
-    on the shell.  Returns (stdout, stderr) output.
-    """
-    proc = subprocess.Popen(
-        cmd_list, stdout=subprocess.PIPE, shell=False)
-    output, err = proc.communicate()
-    return output, err
 
 
 def export_keys(hex_id):
