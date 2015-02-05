@@ -17,7 +17,10 @@
 #
 """Helpers needed by at least two other modules.
 """
+import shutil
 import subprocess
+import tempfile
+from contextlib import contextmanager
 
 
 def execute(cmd_list):
@@ -30,3 +33,20 @@ def execute(cmd_list):
         cmd_list, stdout=subprocess.PIPE, shell=False)
     output, err = proc.communicate()
     return output, err
+
+
+@contextmanager
+def get_tmp_dir():
+    """Get a temporary directory.
+
+    This contextmanager creates a temporary directory that can be used
+    with a `with` statement.  The directory (and any content) is
+    removed afterwards.
+
+    Returns a string containing the path to the temporary directory.
+    """
+    directory = tempfile.mkdtemp()
+    try:
+        yield directory
+    finally:
+        shutil.rmtree(directory)
