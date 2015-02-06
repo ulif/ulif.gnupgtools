@@ -87,6 +87,9 @@ def keys_from_arch(path):
     Keys are ``'pub'``, ``'priv'``, ``'subkeys'``, and ``'key'``. The
     latter represents the master key's short fingerprint. The other
     items contain keys as exported from gpg.
+
+    If keys are not consistend (i.e. we have 'AAAAAAA.pub' and
+    'BBBBBBB.priv' in archive, a `ValueError` is raised.
     """
     archive_dict = extract_archive(path)
     result = dict()

@@ -62,6 +62,18 @@ class TestArgParser(object):
 
 class TestImportMasterKeyModule(object):
 
+    def create_tarfile(self, name, path):
+        old_wd = os.getcwd()
+        os.chdir(path)
+        filenames = os.listdir(path)
+        with tarfile.open(name, 'w:gz') as tar:
+            for filename in filenames:
+                if name.startswith('.') or filename==name:
+                    continue
+                tar.add(filename)
+        os.chdir(old_wd)
+        return os.path.join(path, name)
+
     def test_help(self, capsys):
         # we can get help
         with pytest.raises(SystemExit) as exc_info:
@@ -145,6 +157,17 @@ class TestImportMasterKeyModule(object):
         assert 'pub' in result.keys()
         assert 'priv' in result.keys()
         assert 'subkeys' in result.keys()
+
+    def test_keys_from_arch_inconsistent(self, work_dir_creator):
+        # we do not accept several key names
+        path1 = os.path.join(work_dir_creator.workdir, '01020304.pub')
+        path2 = os.path.join(work_dir_creator.workdir, 'FFFFFFFF.priv')
+        open(path1, 'w').write('file1: 01020304.pub')
+        open(path2, 'w').write('file2: FFFFFFFF.priv')
+        tar_path = self.create_tarfile(
+            'sample.tar.gz', work_dir_creator.workdir)
+        with pytest.raises(ValueError):
+            result = keys_from_arch(tar_path)
 
     def test_import_master_key(self, gnupg_home_creator, capsys):
         # we can import valid master keys
