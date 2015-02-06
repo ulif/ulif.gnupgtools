@@ -6,7 +6,7 @@ import tarfile
 from ulif.gnupgtools.utils import execute
 from ulif.gnupgtools.import_master_key import (
     handle_options, main, is_valid_input_file, extract_archive,
-    import_master_key,
+    keys_from_arch, import_master_key,
     )
 
 
@@ -135,6 +135,16 @@ class TestImportMasterKeyModule(object):
         result = extract_archive(path)
         assert sorted(result.keys()) == ['bar.pub']
         assert result['bar.pub'] == b'bar.pub content'
+
+    def test_keys_from_arch(self):
+        # we can get key data from key archive
+        path = os.path.join(
+            os.path.dirname(__file__), 'export-samples', 'DAA011C5.tar.gz')
+        result = keys_from_arch(path)
+        assert 'key' in result.keys()
+        assert 'pub' in result.keys()
+        assert 'priv' in result.keys()
+        assert 'subkeys' in result.keys()
 
     def test_import_master_key(self, gnupg_home_creator, capsys):
         # we can import valid master keys
