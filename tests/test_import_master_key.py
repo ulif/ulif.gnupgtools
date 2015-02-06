@@ -66,7 +66,8 @@ class TestImportMasterKeyModule(object):
         old_wd = os.getcwd()
         os.chdir(path)
         filenames = os.listdir(path)
-        with tarfile.open(name, 'w:gz') as tar:
+        from ulif.gnupgtools.testing import tarfileopen
+        with tarfileopen(name, 'w:gz') as tar:
             for filename in filenames:
                 if name.startswith('.') or filename==name:
                     continue
