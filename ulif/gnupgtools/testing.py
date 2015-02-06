@@ -3,7 +3,9 @@
 #
 import os
 import shutil
+import tarfile
 import tempfile
+from contextlib import contextmanager
 
 
 class FakeGnuPGHomeTestCase(object):
@@ -26,3 +28,15 @@ class FakeGnuPGHomeTestCase(object):
         if (self.gnupg_home is None) or (not os.path.isdir(self.gnupg_home)):
             return
         shutil.rmtree(self.gnupg_home)
+
+
+@contextmanager
+def tarfileopen(*args):
+    """Replacement for the original tarfile context manager, which is
+    not available in Python2.6.
+    """
+    tar = tarfile.open(*args)
+    try:
+        yield tar
+    finally:
+        tar.close()
