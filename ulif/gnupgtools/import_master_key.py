@@ -81,6 +81,33 @@ def extract_archive(path):
     return result
 
 
+def keys_from_arch(path):
+    """Turn archive at path into dict with predefined keys.
+
+    Keys are ``'pub'``, ``'priv'``, ``'subkeys'``, and ``'key'``. The
+    latter represents the master key's short fingerprint. The other
+    items contain keys as exported from gpg.
+    """
+    archive_dict = extract_archive(path)
+    result = dict()
+    name = None
+    for key, value in archive_dict.items():
+        member_name, ext = os.path.splitext(key)
+        if ext not in ('.pub', '.priv', '.subkeys'):
+            continue
+        if name is not None and member_name != name:
+            raise ValueError('Key names in archive not consistent')
+        name = member_name
+        if ext == '.pub':
+            result['pub'] = value
+        elif ext == '.priv':
+            result['priv'] = value
+        elif ext == '.subkeys':
+            result['subkeys'] = value
+    result['key'] = name
+    return result
+
+
 def import_master_key(path):
     archive_dict = extract_archive(path)
     out, err = None, None
