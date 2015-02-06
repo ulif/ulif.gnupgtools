@@ -93,17 +93,13 @@ def keys_from_arch(path):
     name = None
     for key, value in archive_dict.items():
         member_name, ext = os.path.splitext(key)
-        if ext not in ('.pub', '.priv', '.subkeys'):
-            continue
-        if name is not None and member_name != name:
-            raise ValueError('Key names in archive not consistent')
-        name = member_name
-        if ext == '.pub':
-            result['pub'] = value
-        elif ext == '.priv':
-            result['priv'] = value
-        elif ext == '.subkeys':
-            result['subkeys'] = value
+        for ext_name in ('.pub', '.priv', '.subkeys'):
+            if ext != ext_name:
+                continue
+            if name is not None and member_name != name:
+                raise ValueError('Key names in archive not consistent')
+            name = member_name
+            result[ext_name[1:]] = value
     result['key'] = name
     return result
 
