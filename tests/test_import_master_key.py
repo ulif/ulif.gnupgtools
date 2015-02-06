@@ -8,6 +8,7 @@ from ulif.gnupgtools.import_master_key import (
     handle_options, main, is_valid_input_file, extract_archive,
     keys_from_arch, import_master_key,
     )
+from ulif.gnupgtools.testing import tarfileopen
 
 
 def normalize_bin_path(text):
@@ -66,7 +67,6 @@ class TestImportMasterKeyModule(object):
         old_wd = os.getcwd()
         os.chdir(path)
         filenames = os.listdir(path)
-        from ulif.gnupgtools.testing import tarfileopen
         with tarfileopen(name, 'w:gz') as tar:
             for filename in filenames:
                 if name.startswith('.') or filename==name:
@@ -141,10 +141,9 @@ class TestImportMasterKeyModule(object):
         for name in ('foo', 'bar.pub', 'foodir/baz.priv'):
             with open(name, 'w') as fd:
                 fd.write('%s content' % name)
-        tar = tarfile.open(path, 'w:gz')  # no context manager with py2.6
-        for name in ('foo', 'bar.pub', 'foodir'):
-            tar.add(name)
-        tar.close()
+        with tarfileopen(path, 'w:gz') as tar:
+            for name in ('foo', 'bar.pub', 'foodir'):
+                tar.add(name)
         result = extract_archive(path)
         assert sorted(result.keys()) == ['bar.pub']
         assert result['bar.pub'] == b'bar.pub content'
