@@ -69,7 +69,7 @@ class TestImportMasterKeyModule(object):
         filenames = os.listdir(path)
         with tarfileopen(name, 'w:gz') as tar:
             for filename in filenames:
-                if name.startswith('.') or filename==name:
+                if name.startswith('.') or (filename == name):
                     continue
                 tar.add(filename)
         os.chdir(old_wd)
