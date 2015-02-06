@@ -19,6 +19,7 @@
 """
 import shutil
 import subprocess
+import tarfile
 import tempfile
 from contextlib import contextmanager
 
@@ -50,3 +51,15 @@ def get_tmp_dir():
         yield directory
     finally:
         shutil.rmtree(directory)
+
+
+@contextmanager
+def tarfileopen(*args):
+    """Replacement for the original tarfile context manager, which is
+    not available in Python2.6.
+    """
+    tar = tarfile.open(*args)
+    try:
+        yield tar
+    finally:
+        tar.close()

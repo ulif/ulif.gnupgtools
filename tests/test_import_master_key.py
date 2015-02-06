@@ -2,12 +2,11 @@ import os
 import pytest
 import shutil
 import sys
-from ulif.gnupgtools.utils import execute
+from ulif.gnupgtools.utils import execute, tarfileopen
 from ulif.gnupgtools.import_master_key import (
     handle_options, main, is_valid_input_file, extract_archive,
     keys_from_arch, import_master_key,
     )
-from ulif.gnupgtools.testing import tarfileopen
 
 
 def normalize_bin_path(text):
