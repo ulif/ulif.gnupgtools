@@ -12,6 +12,7 @@ def test_execute():
     out, err = execute(cmd)
     assert out == b'Hello $PATH\n'
 
+
 def test_get_tmp_dir():
     # we can create temporary dirs
     d = None
@@ -19,6 +20,7 @@ def test_get_tmp_dir():
         assert os.path.exists(d)
         assert os.path.isdir(d)
     assert not os.path.exists(d)
+
 
 def test_get_tmp_dir_w_exc():
     # temp dirs are removed also in case of exceptions

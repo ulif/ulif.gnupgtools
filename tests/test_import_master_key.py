@@ -155,7 +155,6 @@ class TestImportMasterKeyModule(object):
         out, err = execute(['gpg', '-k'])
         assert b"DAA011C5" in out  # imported public key present
 
-
     def test_main_invalid_input(self, capsys):
         # we do not accept invalid input archives
         with pytest.raises(SystemExit) as exc_info:
