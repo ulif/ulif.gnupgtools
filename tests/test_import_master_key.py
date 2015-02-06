@@ -2,7 +2,6 @@ import os
 import pytest
 import shutil
 import sys
-import tarfile
 from ulif.gnupgtools.utils import execute
 from ulif.gnupgtools.import_master_key import (
     handle_options, main, is_valid_input_file, extract_archive,
@@ -167,7 +166,7 @@ class TestImportMasterKeyModule(object):
         tar_path = self.create_tarfile(
             'sample.tar.gz', work_dir_creator.workdir)
         with pytest.raises(ValueError):
-            result = keys_from_arch(tar_path)
+            keys_from_arch(tar_path)
 
     def test_import_master_key(self, gnupg_home_creator, capsys):
         # we can import valid master keys
