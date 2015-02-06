@@ -3,8 +3,10 @@ import pytest
 import shutil
 import sys
 import tarfile
+from ulif.gnupgtools.utils import execute
 from ulif.gnupgtools.import_master_key import (
     handle_options, main, is_valid_input_file, extract_archive,
+    import_master_key,
     )
 
 
@@ -133,6 +135,16 @@ class TestImportMasterKeyModule(object):
         result = extract_archive(path)
         assert sorted(result.keys()) == ['bar.pub']
         assert result['bar.pub'] == b'bar.pub content'
+
+    def test_import_master_key(self, gnupg_home_creator, capsys):
+        # we can import valid master keys
+        gnupg_home_creator.create_sample_gnupg_home('one-secret')
+        path = os.path.join(
+            os.path.dirname(__file__), 'export-samples', 'DAA011C5.tar.gz')
+        import_master_key(path)
+        out, err = execute(['gpg', '-k'])
+        assert b"DAA011C5" in out  # imported public key present
+
 
     def test_main_invalid_input(self, capsys):
         # we do not accept invalid input archives

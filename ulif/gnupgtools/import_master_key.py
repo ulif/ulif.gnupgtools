@@ -25,6 +25,7 @@ import argparse
 import os
 import sys
 import tarfile
+from ulif.gnupgtools.utils import get_tmp_dir, execute
 
 
 def handle_options(args):
@@ -78,6 +79,19 @@ def extract_archive(path):
         result[info.name] = tar.extractfile(info).read()
     tar.close()
     return result
+
+
+def import_master_key(path):
+    archive_dict = extract_archive(path)
+    out, err = None, None
+    for name, content in archive_dict.items():
+        if os.path.splitext(name)[1] == '.pub':
+            with get_tmp_dir() as tmp_dir:
+                infile_path = os.path.join(tmp_dir, name)
+                with open(infile_path, 'wb') as fd:
+                    fd.write(content)
+                out, err = execute(['gpg', '--import', infile_path])
+    return out, err
 
 
 def main(args=sys.argv):
