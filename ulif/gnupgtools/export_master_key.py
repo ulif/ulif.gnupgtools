@@ -37,7 +37,7 @@ import sys
 import tarfile
 import time
 from io import BytesIO
-from ulif.gnupgtools.utils import execute
+from ulif.gnupgtools.utils import execute, tarfile_open
 
 #: Regular expression representing a hexadecimal number
 RE_HEX_NUMBER = re.compile('(^[a-f0-9]+)$|(^[A-F0-9]+$)')
@@ -88,19 +88,18 @@ def create_tarfile(archive_name, members_dict):
     All files are stored with user perms set only (no group or other
     permissions.)
     """
-    tar = tarfile.open(archive_name, "w:gz")
-    os.chmod(archive_name, PERM_USER_RW_ONLY)  # ~ octal 0600 ~ rw-------
-    for name, content in members_dict.items():
-        info = tarfile.TarInfo(name=name)
-        info.mode = PERM_USER_RW_ONLY          # ~ octal 0600 = rw-------
-        info.mtime = time.time()
-        info.size = len(content)
-        info.uid = os.getuid()
-        info.gid = os.getgid()
-        info.uname = pwd.getpwuid(os.getuid()).pw_name
-        info.gname = grp.getgrgid(os.getgid()).gr_name
-        tar.addfile(tarinfo=info, fileobj=BytesIO(content))
-    tar.close()
+    with tarfile_open(archive_name, "w:gz") as tar:
+        os.chmod(archive_name, PERM_USER_RW_ONLY)  # ~ octal 0600 ~ rw-------
+        for name, content in members_dict.items():
+            info = tarfile.TarInfo(name=name)
+            info.mode = PERM_USER_RW_ONLY          # ~ octal 0600 = rw-------
+            info.mtime = time.time()
+            info.size = len(content)
+            info.uid = os.getuid()
+            info.gid = os.getgid()
+            info.uname = pwd.getpwuid(os.getuid()).pw_name
+            info.gname = grp.getgrgid(os.getgid()).gr_name
+            tar.addfile(tarinfo=info, fileobj=BytesIO(content))
 
 
 def handle_options(args):

@@ -8,6 +8,7 @@ import sys
 import tarfile
 import tempfile
 import ulif.gnupgtools.export_master_key
+from ulif.gnupgtools.utils import tarfile_open
 from ulif.gnupgtools.export_master_key import (
     main, greeting, VERSION, get_secret_keys_output, get_key_list,
     export_keys, input_key, RE_HEX_NUMBER, create_tarfile
@@ -140,8 +141,8 @@ class TestExportMasterKeyModule(object):
                 'file2': b'content2',
                 })
         assert tarfile.is_tarfile('sample.tar.gz')
-        tar = tarfile.open('sample.tar.gz', 'r:gz')
-        tar.extractall()
+        with tarfile_open('sample.tar.gz', 'r:gz') as tar:
+            tar.extractall()
         assert sorted(os.listdir(".")) == ['file1', 'file2', 'sample.tar.gz']
         assert open('file1', 'r').read() == 'content1'
         assert open('file2', 'r').read() == 'content2'
@@ -159,8 +160,8 @@ class TestExportMasterKeyModule(object):
                 'file2': b'content2',
                 })
         assert tarfile.is_tarfile('sample.tar.gz')
-        tar = tarfile.open('sample.tar.gz', 'r:gz')
-        members = tar.getmembers()
+        with tarfile_open('sample.tar.gz', 'r:gz') as tar:
+            members = tar.getmembers()
         assert members[0].uid == os.getuid()
         assert members[1].uid == os.getuid()
         assert members[0].gid == os.getgid()
@@ -239,8 +240,8 @@ class TestExportMasterKeyModule(object):
         assert os.path.isfile(result_path)
         assert os.path.basename(result_path) == 'DAA011C5.tar.gz'
         assert tarfile.is_tarfile(result_path)
-        tar = tarfile.open(result_path, 'r:gz')
-        members = tar.getmembers()
+        with tarfile_open(result_path, 'r:gz') as tar:
+            members = tar.getmembers()
         priv_key_info = [
             x for x in members if x.name == 'DAA011C5.priv'][0]
         assert priv_key_info.size > 0
@@ -260,8 +261,8 @@ class TestExportMasterKeyModule(object):
         assert os.path.exists(result_path)
         assert result_path.startswith(gnupg_home_creator.workdir)
         assert tarfile.is_tarfile(result_path)
-        tar = tarfile.open(result_path, 'r:gz')
-        members = tar.getmembers()
+        with tarfile_open(result_path, 'r:gz') as tar:
+            members = tar.getmembers()
         assert sorted([x.name for x in members]) == [
             'DAA011C5.priv', 'DAA011C5.pub', 'DAA011C5.subkeys']
         assert 0 not in [x.size for x in members]
