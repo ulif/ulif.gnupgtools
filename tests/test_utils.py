@@ -2,7 +2,7 @@
 import os
 import pytest
 import tarfile
-from ulif.gnupgtools.utils import execute, get_tmp_dir, tarfileopen
+from ulif.gnupgtools.utils import execute, get_tmp_dir, tarfile_open
 
 
 @pytest.mark.skipif(
@@ -40,11 +40,11 @@ def create_files_for_tarring(path):
     open(file2, 'w').write('file2')
 
 
-def test_tarfileopen(work_dir_creator):
+def test_tarfile_open(work_dir_creator):
     # we can open tarfiles with contextmanager, also in Python 2.6
     create_files_for_tarring(work_dir_creator.workdir)
     tmp_tar = None
-    with tarfileopen('sample.tar.gz', 'w:gz') as tar:
+    with tarfile_open('sample.tar.gz', 'w:gz') as tar:
         tmp_tar = tar
         tar.add('file1')
         tar.add('file2')
@@ -55,12 +55,12 @@ def test_tarfileopen(work_dir_creator):
     assert sorted(member_names) == ['file1', 'file2']
 
 
-def test_tarfileopen_w_exc(work_dir_creator):
+def test_tarfile_open_w_exc(work_dir_creator):
     # tar files are closed in case of exceptions
     create_files_for_tarring(work_dir_creator.workdir)
     tmp_tar = None
     with pytest.raises(Exception):
-        with tarfileopen('sample.tar.gz', 'w:gz') as tar:
+        with tarfile_open('sample.tar.gz', 'w:gz') as tar:
             tmp_tar = tar
             raise Exception('Intended')
     assert tmp_tar.closed is True

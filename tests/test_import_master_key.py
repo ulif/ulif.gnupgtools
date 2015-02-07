@@ -2,7 +2,7 @@ import os
 import pytest
 import shutil
 import sys
-from ulif.gnupgtools.utils import execute, tarfileopen
+from ulif.gnupgtools.utils import execute, tarfile_open
 from ulif.gnupgtools.import_master_key import (
     handle_options, main, is_valid_input_file, extract_archive,
     keys_from_arch, import_master_key,
@@ -65,7 +65,7 @@ class TestImportMasterKeyModule(object):
         old_wd = os.getcwd()
         os.chdir(path)
         filenames = os.listdir(path)
-        with tarfileopen(name, 'w:gz') as tar:
+        with tarfile_open(name, 'w:gz') as tar:
             for filename in filenames:
                 if name.startswith('.') or (filename == name):
                     continue
@@ -139,7 +139,7 @@ class TestImportMasterKeyModule(object):
         for name in ('foo', 'bar.pub', 'foodir/baz.priv'):
             with open(name, 'w') as fd:
                 fd.write('%s content' % name)
-        with tarfileopen(path, 'w:gz') as tar:
+        with tarfile_open(path, 'w:gz') as tar:
             for name in ('foo', 'bar.pub', 'foodir'):
                 tar.add(name)
         result = extract_archive(path)

@@ -54,9 +54,11 @@ def get_tmp_dir():
 
 
 @contextmanager
-def tarfileopen(*args):
+def tarfile_open(*args):
     """Replacement for the original tarfile context manager, which is
     not available in Python2.6.
+
+    You can use it like `tarfile.open()`.
     """
     tar = tarfile.open(*args)
     try:
