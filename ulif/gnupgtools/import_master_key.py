@@ -108,15 +108,14 @@ def keys_from_arch(path):
 
 
 def import_master_key(path):
-    archive_dict = extract_archive(path)
+    keys_dict = keys_from_arch(path)
     out, err = None, None
-    for name, content in archive_dict.items():
-        if os.path.splitext(name)[1] == '.pub':
-            with get_tmp_dir() as tmp_dir:
-                infile_path = os.path.join(tmp_dir, name)
-                with open(infile_path, 'wb') as fd:
-                    fd.write(content)
-                out, err = execute(['gpg', '--import', infile_path])
+    for key, opt in (('pub', '--import'), ):
+        with get_tmp_dir() as tmp_dir:
+            infile_path = os.path.join(tmp_dir, 'key.%s' % key)
+            with open(infile_path, 'wb') as fd:
+                fd.write(keys_dict[key])
+            out, err = execute(['gpg', opt, infile_path])
     return out, err
 
 
