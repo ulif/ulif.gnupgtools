@@ -11,7 +11,7 @@ import ulif.gnupgtools.export_master_key
 from ulif.gnupgtools.utils import tarfile_open
 from ulif.gnupgtools.export_master_key import (
     main, greeting, VERSION, get_secret_keys_output, get_key_list,
-    export_keys, input_key, RE_HEX_NUMBER, create_tarfile
+    export_keys, input_key, RE_HEX_NUMBER, create_tarfile, s
     )
 
 try:
@@ -131,6 +131,11 @@ class TestExportMasterKeyModule(object):
         assert not RE_HEX_NUMBER.match('b"01234"')
         assert not RE_HEX_NUMBER.match('not-a-hex-num')
         assert not RE_HEX_NUMBER.match('')
+
+    def test_text_substitution(self):
+        # text substitution works
+        assert s("text") == "text"
+        assert s(b"text".decode("utf-8")) == "text"
 
     def test_create_tarfile(self, work_dir_creator):
         # we can create tarfiles
