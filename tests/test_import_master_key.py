@@ -173,8 +173,9 @@ class TestImportMasterKeyModule(object):
         path = os.path.join(
             os.path.dirname(__file__), 'export-samples', 'DAA011C5.tar.gz')
         import_master_key(path)
-        out, err = execute(['gpg', '-k'])
+        out, err = execute(['gpg', '-K', 'DAA011C5'])
         assert b"DAA011C5" in out  # imported public key present
+        assert b'sec#' in out      # imported master key not able to sign
 
     def test_main_invalid_input(self, capsys):
         # we do not accept invalid input archives

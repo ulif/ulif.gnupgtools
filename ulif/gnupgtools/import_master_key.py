@@ -110,7 +110,8 @@ def keys_from_arch(path):
 def import_master_key(path):
     keys_dict = keys_from_arch(path)
     out, err = None, None
-    for key, opt in (('pub', '--import'), ):
+    for key, opt in (('pub', '--import'),
+                     ('subkeys', '--import')):
         with get_tmp_dir() as tmp_dir:
             infile_path = os.path.join(tmp_dir, 'key.%s' % key)
             with open(infile_path, 'wb') as fd:
