@@ -188,3 +188,13 @@ class TestImportMasterKeyModule(object):
         out, err = capsys.readouterr()
         err = normalize_bin_path(err)
         assert err == 'Not a valid master key archive: /invalid-path\n'
+
+    def test_main(self, gnupg_home_creator, capsys):
+        # we can import regular files
+        gnupg_home_creator.create_sample_gnupg_home('one-secret')
+        path = os.path.join(
+            os.path.dirname(__file__), 'export-samples', 'DAA011C5.tar.gz')
+        main(['gpg-import-masterkey', path])
+        out, err = execute(['gpg', '-K', 'DAA011C5'])
+        assert b"DAA011C5" in out  # imported public key present
+        assert b'sec#' in out      # imported master key not able to sign

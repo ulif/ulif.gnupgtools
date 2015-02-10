@@ -126,3 +126,5 @@ def main(args=sys.argv):
         print("Not a valid master key archive: %s" % options.infile,
               file=sys.stderr)
         sys.exit(2)
+    import_master_key(options.infile)
+    return
