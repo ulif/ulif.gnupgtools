@@ -74,6 +74,7 @@ setup(
     entry_points={
         'console_scripts': [
             'gpg-export-master-key = ulif.gnupgtools.export_master_key:main',
+            'gpg-import-master-key = ulif.gnupgtools.import_master_key:main',
         ]
         }
 )
