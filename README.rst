@@ -41,6 +41,9 @@ The documentation can be found at
 Examples
 ========
 
+Export Master Key
+-----------------
+
 Create an export of a secret master key::
 
   $ gpg-export-master-key
@@ -62,6 +65,19 @@ Create an export of a secret master key::
   All export files written to: /.../DAA011C5.tar.gz.
 
 Use ``gpg-export-master-key --help`` for all options.
+
+Import Master Key
+-----------------
+
+Import a key that was exported before::
+
+  $ gpg-import-master-key DAA011C5.tar.gz
+
+The master key is imported but without the ability to sign any new
+subkeys or similar.
+
+Use ``gpg-import-master-key --help`` for all options.
+
 
 
 Install
