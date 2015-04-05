@@ -47,7 +47,7 @@ PERM_USER_RW_ONLY = stat.S_IRUSR | stat.S_IWUSR
 
 input_func = input
 if sys.version[0] < "3":
-    input_func = raw_input  # pragma: no cover
+    input_func = raw_input  # NOQA  # pragma: no cover
 
 
 VERSION = pkg_resources.get_distribution('ulif.gnupgtools').version
@@ -120,7 +120,7 @@ def greeting():
          "This is free software: you are free to change and redistribute "
          "it. There is NO WARRANTY, to the extent permitted by law. "
          ) % VERSION
-        )
+    )
 
 
 def get_secret_keys_output(gnupg_path='gpg'):
@@ -239,7 +239,7 @@ def export_keys(hex_id):
             pub_path: pub_file,
             priv_path: priv_file,
             subs_path: subs_file}
-        )
+    )
     print("\nAll export files written to: %s." % (tar_path))
     return tar_path
 
