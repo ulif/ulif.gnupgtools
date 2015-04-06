@@ -289,6 +289,15 @@ class TestExportMasterKeyModule(object):
         out, err = capsys.readouterr()
         assert "Ferdinand Fake <ferdi@fake.org>" in out
 
+    def test_main_option_gpg2(self, gnupg_home_creator, mock_input,
+                             capsys, fake_gpg_binary,):
+        # we can use gpg2 if installed
+        gnupg_home_creator.create_sample_gnupg_home('two-users')
+        mock_input.fake_input_values = ["1"]
+        main(['gpg-export-master-key', '-p', 'gpg2'])
+        out, err = capsys.readouterr()
+        assert "DAA011C5.tar.gz" in out
+
     def test_help(self, gnupg_home_creator, capsys):
         # we can get help
         with pytest.raises(SystemExit) as exc_info:
