@@ -289,6 +289,8 @@ class TestExportMasterKeyModule(object):
         out, err = capsys.readouterr()
         assert "Ferdinand Fake <ferdi@fake.org>" in out
 
+    @pytest.mark.skipif(not os.path.isfile("/usr/bin/gpg2"),
+                        reason="No such file: '/usr/bin/gpg2'")
     def test_main_option_gpg2(self, gnupg_home_creator, mock_input,
                              capsys, fake_gpg_binary,):
         # we can use gpg2 if installed
