@@ -198,3 +198,15 @@ class TestImportMasterKeyModule(object):
         out, err = execute(['gpg', '-K', 'DAA011C5'])
         assert b"DAA011C5" in out  # imported public key present
         assert b'sec#' in out      # imported master key not able to sign
+
+    @pytest.mark.skipif(not os.path.isfile("/usr/bin/gpg2"),
+                        reason="No such file: '/usr/bin/gpg2'")
+    def test_main_option_gpg2(self, gnupg_home_creator, capsys):
+        # we can use gpg2 if installed
+        gnupg_home_creator.create_sample_gnupg_home('one-secret')
+        path = os.path.join(
+            os.path.dirname(__file__), 'export-samples', 'DAA011C5.tar.gz')
+        main(['gpg-import-masterkey', path, '-p', 'gpg2'])
+        out, err = execute(['gpg', '-K', 'DAA011C5'])
+        assert b"DAA011C5" in out  # imported public key present
+        assert b'sec#' in out      # imported master key not able to sign
