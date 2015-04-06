@@ -64,7 +64,9 @@ Create an export of a secret master key::
 
   All export files written to: /.../DAA011C5.tar.gz.
 
-Use ``gpg-export-master-key --help`` for all options.
+With ``-p`` you can set the path to a certain gnupg executable.
+
+Use ``gpg-export-master-key --help`` to list all options.
 
 Import Master Key
 -----------------
@@ -75,6 +77,8 @@ Import a key that was exported before::
 
 The master key is imported but without the ability to sign any new
 subkeys or similar.
+
+With ``-p`` you can set the path to a certain gnupg executable.
 
 Use ``gpg-import-master-key --help`` for all options.
 
