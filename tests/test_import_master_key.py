@@ -46,7 +46,7 @@ class TestArgParser(object):
         out = normalize_bin_path(out)
         assert exc_info.value.code == 0
         assert out == (
-            "usage: gpg-import-master-key [-h] [-p PATH] FILE\n"
+            "usage: gpg-import-master-key [-h] [-b PATH] FILE\n"
             "\n"
             "Import GnuPG master key\n"
             "\n"
@@ -55,7 +55,8 @@ class TestArgParser(object):
             "gpg-export-master-key.\n"
             "\noptional arguments:\n"
             "  -h, --help            show this help message and exit\n"
-            "  -p PATH, --path PATH  Path to GnuPG binary to use\n"
+            "  -b PATH, --binary PATH\n"
+            "                        Path to GnuPG binary to use\n"
             )
 
 
@@ -81,7 +82,7 @@ class TestImportMasterKeyModule(object):
         out, err = capsys.readouterr()
         out = normalize_bin_path(out)
         assert out == (
-            'usage: gpg-import-master-key [-h] [-p PATH] FILE\n'
+            'usage: gpg-import-master-key [-h] [-b PATH] FILE\n'
             '\n'
             'Import GnuPG master key\n'
             '\n'
@@ -91,7 +92,8 @@ class TestImportMasterKeyModule(object):
             '\n'
             'optional arguments:\n'
             '  -h, --help            show this help message and exit\n'
-            '  -p PATH, --path PATH  Path to GnuPG binary to use\n'
+            '  -b PATH, --binary PATH\n'
+            '                        Path to GnuPG binary to use\n'
             )
 
     def test_valid_input_not_a_file(self):
@@ -206,7 +208,7 @@ class TestImportMasterKeyModule(object):
         gnupg_home_creator.create_sample_gnupg_home('one-secret')
         path = os.path.join(
             os.path.dirname(__file__), 'export-samples', 'DAA011C5.tar.gz')
-        main(['gpg-import-masterkey', path, '-p', 'gpg2'])
+        main(['gpg-import-masterkey', path, '-b', 'gpg2'])
         out, err = execute(['gpg', '-K', 'DAA011C5'])
         assert b"DAA011C5" in out  # imported public key present
         assert b'sec#' in out      # imported master key not able to sign
