@@ -285,7 +285,7 @@ class TestExportMasterKeyModule(object):
         # we can set a custom gpg path
         gnupg_home_creator.create_sample_gnupg_home('two-users')
         mock_input.fake_input_values = ["1"]
-        main(['gpg-export-master-key', '-p', fake_gpg_binary.path])
+        main(['gpg-export-master-key', '-b', fake_gpg_binary.path])
         out, err = capsys.readouterr()
         assert "Ferdinand Fake <ferdi@fake.org>" in out
 
@@ -296,7 +296,7 @@ class TestExportMasterKeyModule(object):
         # we can use gpg2 if installed
         gnupg_home_creator.create_sample_gnupg_home('two-users')
         mock_input.fake_input_values = ["1"]
-        main(['gpg-export-master-key', '-p', 'gpg2'])
+        main(['gpg-export-master-key', '-b', 'gpg2'])
         out, err = capsys.readouterr()
         assert "DAA011C5.tar.gz" in out
 
@@ -309,11 +309,12 @@ class TestExportMasterKeyModule(object):
         out = out.replace(
             os.path.basename(sys.argv[0]), 'gpg-export-master-key')
         assert out == (
-            'usage: gpg-export-master-key [-h] [-p PATH]\n'
+            'usage: gpg-export-master-key [-h] [-b PATH]\n'
             '\n'
             'Export GnuPG master key\n'
             '\n'
             'optional arguments:\n'
             '  -h, --help            show this help message and exit\n'
-            '  -p PATH, --path PATH  Path to GnuPG binary to use\n'
+            '  -b PATH, --binary PATH\n'
+            '                        Path to GnuPG binary to use\n'
             )
