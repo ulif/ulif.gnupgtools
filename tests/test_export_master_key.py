@@ -280,8 +280,8 @@ class TestExportMasterKeyModule(object):
         assert result is None
         assert "No keys found. Exiting." in out
 
-    def test_main_option_gpg(self, gnupg_home_creator, mock_input,
-                             capsys, fake_gpg_binary,):
+    def test_main_option_binary_path(
+            self, gnupg_home_creator, mock_input, capsys, fake_gpg_binary,):
         # we can set a custom gpg path
         gnupg_home_creator.create_sample_gnupg_home('two-users')
         mock_input.fake_input_values = ["1"]
@@ -291,7 +291,7 @@ class TestExportMasterKeyModule(object):
 
     @pytest.mark.skipif(not os.path.isfile("/usr/bin/gpg2"),
                         reason="No such file: '/usr/bin/gpg2'")
-    def test_main_option_gpg2(self, gnupg_home_creator, mock_input,
+    def test_main_use_gpg2(self, gnupg_home_creator, mock_input,
                              capsys, fake_gpg_binary,):
         # we can use gpg2 if installed
         gnupg_home_creator.create_sample_gnupg_home('two-users')
