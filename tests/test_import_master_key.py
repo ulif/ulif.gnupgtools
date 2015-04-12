@@ -191,7 +191,7 @@ class TestImportMasterKeyModule(object):
         gnupg_home_creator.create_sample_gnupg_home('one-secret')
         path = os.path.join(
             os.path.dirname(__file__), 'export-samples', 'DAA011C5.tar.gz')
-        with pytest.raises(FileNotFoundError):
+        with pytest.raises(OSError):
             import_master_key(path, executable="invalid-binary-path")
 
     def test_main_invalid_input(self, capsys):
