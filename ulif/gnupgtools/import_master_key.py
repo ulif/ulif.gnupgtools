@@ -108,6 +108,10 @@ def keys_from_arch(path):
 
 
 def import_master_key(path, executable='gpg'):
+    """Import master key from archive in `path`.
+
+    Use `executable` as `gpg` binary.
+    """
     keys_dict = keys_from_arch(path)
     out, err = None, None
     for key, opt in (('pub', '--import'),
