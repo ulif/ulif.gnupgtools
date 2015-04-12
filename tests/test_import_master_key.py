@@ -61,8 +61,13 @@ class TestArgParser(object):
 
     def test_binary(self, capsys):
         # we support --binary
-        options_set = handle_options(['-b', 'foo', 'path-to-file'])
-        assert options_set.gnupg_path == 'foo'
+        options = handle_options(['-b', 'foo', 'path-to-file'])
+        assert options.gnupg_path == 'foo'
+
+    def test_binary_default(self):
+        # we get a sensible default.
+        options = handle_options(['path-to-file'])
+        assert options.gnupg_path == 'gpg'
 
 
 class TestImportMasterKeyModule(object):
