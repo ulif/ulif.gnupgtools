@@ -203,7 +203,7 @@ class TestImportMasterKeyModule(object):
 
     @pytest.mark.skipif(not os.path.isfile("/usr/bin/gpg2"),
                         reason="No such file: '/usr/bin/gpg2'")
-    def test_main_option_gpg2(self, gnupg_home_creator, capsys):
+    def test_main_use_gpg2(self, gnupg_home_creator, capsys):
         # we can use gpg2 if installed
         gnupg_home_creator.create_sample_gnupg_home('one-secret')
         path = os.path.join(
