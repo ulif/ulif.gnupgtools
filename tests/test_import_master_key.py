@@ -179,6 +179,16 @@ class TestImportMasterKeyModule(object):
         assert b"DAA011C5" in out  # imported public key present
         assert b'sec#' in out      # imported master key not able to sign
 
+    def test_import_master_key_respects_executable(
+            self, gnupg_home_creator, capsys):
+        # if we pass in an invalid executable path, we cause trouble
+        # (which shows: the path is really tried to be used)
+        gnupg_home_creator.create_sample_gnupg_home('one-secret')
+        path = os.path.join(
+            os.path.dirname(__file__), 'export-samples', 'DAA011C5.tar.gz')
+        with pytest.raises(FileNotFoundError):
+            import_master_key(path, executable="invalid-binary-path")
+
     def test_main_invalid_input(self, capsys):
         # we do not accept invalid input archives
         with pytest.raises(SystemExit) as exc_info:
