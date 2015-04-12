@@ -107,7 +107,7 @@ def keys_from_arch(path):
     return result
 
 
-def import_master_key(path):
+def import_master_key(path, executable='gpg'):
     keys_dict = keys_from_arch(path)
     out, err = None, None
     for key, opt in (('pub', '--import'),
@@ -116,7 +116,7 @@ def import_master_key(path):
             infile_path = os.path.join(tmp_dir, 'key.%s' % key)
             with open(infile_path, 'wb') as fd:
                 fd.write(keys_dict[key])
-            out, err = execute(['gpg', opt, infile_path])
+            out, err = execute([executable, opt, infile_path])
     return out, err
 
 
