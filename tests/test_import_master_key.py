@@ -59,6 +59,11 @@ class TestArgParser(object):
             "                        Path to GnuPG binary to use\n"
             )
 
+    def test_binary(self, capsys):
+        # we support --binary
+        options_set = handle_options(['-b', 'foo', 'path-to-file'])
+        assert options_set.gnupg_path == 'foo'
+
 
 class TestImportMasterKeyModule(object):
 
