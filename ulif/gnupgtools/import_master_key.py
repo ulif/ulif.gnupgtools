@@ -124,11 +124,14 @@ def import_master_key(path, executable='gpg'):
     return out, err
 
 
-def main(args=sys.argv):
+def main(args=None):
     """Import a master key.
 
-    This is the interface for the commandline.
+    This is the interface for the commandline. If `args` is not given, we
+    lookup `sys.argv`.
     """
+    if args is None:
+        args = sys.argv
     options = handle_options(args[1:])
     if not is_valid_input_file(options.infile):
         print("Not a valid master key archive: %s" % options.infile,
