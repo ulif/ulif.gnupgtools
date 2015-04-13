@@ -1,6 +1,8 @@
 import os
 import pytest
 import shutil
+import stat
+import sys
 import tempfile
 
 
@@ -38,6 +40,45 @@ class GnuPGHomeCreator(WorkDirCreator):
         sample_home = os.path.join(
             os.path.dirname(__file__), 'gnupg-samples', name)
         shutil.copytree(sample_home, self.gnupg_home)
+
+
+class FakeGnuPGBinary(object):
+    """Creates/removes a fake GPG binary.
+
+    Installs (and removes) an executable script that produces some
+    determined output.
+
+    The script actually a copy of the `gpg_fake` Python script in the
+    local directory. The script is modified to be started with the
+    Python executable used at test time.
+
+    The one interesting part you normally need, is the `path`
+    attribute containing the path to the generated script.
+    """
+
+    def install(self):
+        """Install a `gpg_fake` script.
+        """
+        self._tmpdir = tempfile.mkdtemp()
+        template_path = os.path.join(os.path.dirname(__file__), 'gpg_fake')
+        source = open(template_path, 'r').read()
+        source = source % (sys.executable, )
+        self.path = os.path.join(self._tmpdir, 'gpg_fake')
+        with open(self.path, 'w') as fd:
+            fd.write(source)
+        # set strict permissions on Unix
+        os.chmod(self.path, stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR)
+
+    def remove(self):
+        shutil.rmtree(self._tmpdir)
+
+
+@pytest.fixture(scope="module")
+def fake_gpg_binary(request):
+    fake_binary = FakeGnuPGBinary()
+    request.addfinalizer(fake_binary.remove)
+    fake_binary.install()
+    return fake_binary
 
 
 @pytest.fixture(scope="function")
