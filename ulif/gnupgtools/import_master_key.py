@@ -125,6 +125,10 @@ def import_master_key(path, executable='gpg'):
 
 
 def main(args=sys.argv):
+    """Import a master key.
+
+    This is the interface for the commandline.
+    """
     options = handle_options(args[1:])
     if not is_valid_input_file(options.infile):
         print("Not a valid master key archive: %s" % options.infile,
