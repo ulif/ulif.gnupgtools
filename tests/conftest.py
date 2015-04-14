@@ -90,6 +90,15 @@ def fake_gpg_binary(request):
 
 
 @pytest.fixture(scope="function")
+def output_args_script(request):
+    script = ExecutableScript('output_args')
+    request.addfinalizer(script.remove)
+    script.install()
+    script.out_path = os.path.join(script._tmpdir, 'out')
+    return script
+
+
+@pytest.fixture(scope="function")
 def work_dir_creator(request):
     creator = WorkDirCreator()
     request.addfinalizer(creator.tear_down)
