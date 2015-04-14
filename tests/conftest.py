@@ -56,14 +56,18 @@ class FakeGnuPGBinary(object):
     attribute containing the path to the generated script.
     """
 
+    template_name = 'gpg_fake'
+    script_name = template_name
+
     def install(self):
         """Install a `gpg_fake` script.
         """
         self._tmpdir = tempfile.mkdtemp()
-        template_path = os.path.join(os.path.dirname(__file__), 'gpg_fake')
+        template_path = os.path.join(
+            os.path.dirname(__file__), self.template_name)
         source = open(template_path, 'r').read()
         source = source % (sys.executable, )
-        self.path = os.path.join(self._tmpdir, 'gpg_fake')
+        self.path = os.path.join(self._tmpdir, self.script_name)
         with open(self.path, 'w') as fd:
             fd.write(source)
         # set strict permissions on Unix
