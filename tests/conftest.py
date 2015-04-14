@@ -42,25 +42,29 @@ class GnuPGHomeCreator(WorkDirCreator):
         shutil.copytree(sample_home, self.gnupg_home)
 
 
-class FakeGnuPGBinary(object):
-    """Creates/removes a fake GPG binary.
+class ExecutableScript(object):
+    """Creates/removes an executable script.
 
-    Installs (and removes) an executable script that produces some
-    determined output.
+    Installs (and removes) an executable script from a template.
 
-    The script actually a copy of the `gpg_fake` Python script in the
-    local directory. The script is modified to be started with the
+    The tempate is looked up by `template_name` in the local test dir and
+    must provide a placeholder (``%s``) which will be replaced with
     Python executable used at test time.
+
+    The generated script is then copied to a temporary directory and
+    made executable by setting approriate flags. The script basename
+    will be like `template_name` except if you gave a different
+    `script_name` as well.
 
     The one interesting part you normally need, is the `path`
     attribute containing the path to the generated script.
     """
-
-    template_name = 'gpg_fake'
-    script_name = template_name
+    def __init__(self, template_name, script_name=None):
+        self.template_name = template_name
+        self.script_name = script_name or self.template_name
 
     def install(self):
-        """Install a `gpg_fake` script.
+        """Install script from template.
         """
         self._tmpdir = tempfile.mkdtemp()
         template_path = os.path.join(
@@ -79,7 +83,7 @@ class FakeGnuPGBinary(object):
 
 @pytest.fixture(scope="module")
 def fake_gpg_binary(request):
-    fake_binary = FakeGnuPGBinary()
+    fake_binary = ExecutableScript('gpg_fake')
     request.addfinalizer(fake_binary.remove)
     fake_binary.install()
     return fake_binary
