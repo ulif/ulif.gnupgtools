@@ -1,0 +1,10 @@
+#!%s
+"""A script that outputs all args passed in to a file called `out`.
+"""
+import os
+import sys
+
+if __name__ == '__main__':
+    output_path = os.path.join(os.path.dirname(__file__), 'out')
+    with open(output_path, 'a+') as fd:
+        fd.write(str(sys.argv))
