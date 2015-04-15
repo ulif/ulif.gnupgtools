@@ -9,6 +9,11 @@ from ulif.gnupgtools.import_master_key import (
     )
 
 
+# The path to an already generated, valid export sample.
+DAA01C5_TAR_GZ_PATH = os.path.join(
+    os.path.dirname(__file__), 'export-samples', 'DAA011C5.tar.gz')
+
+
 def normalize_bin_path(text):
     """Replace binary path in `text` with 'gpg-import-master-key'.
     """
@@ -124,16 +129,11 @@ class TestImportMasterKeyModule(object):
 
     def test_valid_input(self):
         # any valid tar archive is accepted
-        sample_path = os.path.join(
-            os.path.dirname(__file__), 'export-samples',
-            'DAA011C5.tar.gz')
-        assert is_valid_input_file(sample_path) is True
+        assert is_valid_input_file(DAA01C5_TAR_GZ_PATH) is True
 
     def test_extract_archive(self, work_dir_creator):
         # we can extract archives
-        src_path = os.path.join(
-            os.path.dirname(__file__), 'export-samples',
-            'DAA011C5.tar.gz')
+        src_path = DAA01C5_TAR_GZ_PATH
         dest_path = os.path.join(
             work_dir_creator.workdir, 'sample.tar.gz')
         shutil.copy2(src_path, dest_path)
@@ -182,8 +182,7 @@ class TestImportMasterKeyModule(object):
     def test_import_master_key(self, gnupg_home_creator, capsys):
         # we can import valid master keys
         gnupg_home_creator.create_sample_gnupg_home('one-secret')
-        path = os.path.join(
-            os.path.dirname(__file__), 'export-samples', 'DAA011C5.tar.gz')
+        path = DAA01C5_TAR_GZ_PATH
         import_master_key(path)
         out, err = execute(['gpg', '-K', 'DAA011C5'])
         assert b"DAA011C5" in out  # imported public key present
@@ -193,8 +192,7 @@ class TestImportMasterKeyModule(object):
             self, gnupg_home_creator, capsys, output_args_script):
         # we can pass in an gpg executable (which is really used)
         gnupg_home_creator.create_sample_gnupg_home('empty')
-        path = os.path.join(
-            os.path.dirname(__file__), 'export-samples', 'DAA011C5.tar.gz')
+        path = DAA01C5_TAR_GZ_PATH
         import_master_key(path, executable=output_args_script.path)
         assert os.path.exists(output_args_script.out_path)
 
@@ -202,8 +200,7 @@ class TestImportMasterKeyModule(object):
             self, gnupg_home_creator, capsys):
         # if we pass in an invalid executable path, we cause trouble
         gnupg_home_creator.create_sample_gnupg_home('one-secret')
-        path = os.path.join(
-            os.path.dirname(__file__), 'export-samples', 'DAA011C5.tar.gz')
+        path = DAA01C5_TAR_GZ_PATH
         with pytest.raises(OSError):
             import_master_key(path, executable="invalid-binary-path")
 
@@ -222,8 +219,7 @@ class TestImportMasterKeyModule(object):
     def test_main(self, gnupg_home_creator, capsys):
         # we can import regular files
         gnupg_home_creator.create_sample_gnupg_home('one-secret')
-        path = os.path.join(
-            os.path.dirname(__file__), 'export-samples', 'DAA011C5.tar.gz')
+        path = DAA01C5_TAR_GZ_PATH
         main(['gpg-import-masterkey', path])
         out, err = execute(['gpg', '-K', 'DAA011C5'])
         assert b"DAA011C5" in out  # imported public key present
@@ -233,8 +229,7 @@ class TestImportMasterKeyModule(object):
             self, gnupg_home_creator, capsys, output_args_script):
         # we can set a custom gpg path
         gnupg_home_creator.create_sample_gnupg_home('empty')
-        path = os.path.join(
-            os.path.dirname(__file__), 'export-samples', 'DAA011C5.tar.gz')
+        path = DAA01C5_TAR_GZ_PATH
         main(['gpg-import-master-key', '-b', output_args_script.path, path])
         result_path = output_args_script.out_path
         assert os.path.exists(result_path)   # the output file was written
@@ -244,8 +239,7 @@ class TestImportMasterKeyModule(object):
     def test_main_use_gpg2(self, gnupg_home_creator, capsys):
         # we can use gpg2 if installed
         gnupg_home_creator.create_sample_gnupg_home('one-secret')
-        path = os.path.join(
-            os.path.dirname(__file__), 'export-samples', 'DAA011C5.tar.gz')
+        path = DAA01C5_TAR_GZ_PATH
         main(['gpg-import-masterkey', path, '-b', 'gpg2'])
         out, err = execute(['gpg', '-K', 'DAA011C5'])
         assert b"DAA011C5" in out  # imported public key present
