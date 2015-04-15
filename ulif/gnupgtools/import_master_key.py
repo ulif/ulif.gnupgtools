@@ -118,8 +118,8 @@ def import_master_key(path, executable='gpg'):
                      ('subkeys', '--import')):
         with get_tmp_dir() as tmp_dir:
             infile_path = os.path.join(tmp_dir, 'key.%s' % key)
-            with open(infile_path, 'wb') as fd:
-                fd.write(keys_dict[key])
+            with open(infile_path, 'wb') as infile_fd:
+                infile_fd.write(keys_dict[key])
             out, err = execute([executable, opt, infile_path])
     return out, err
 
