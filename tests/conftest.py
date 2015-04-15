@@ -12,11 +12,13 @@ class WorkDirCreator(object):
         self.temp_dir = tempfile.mkdtemp()
         self.workdir = os.path.join(self.temp_dir, 'work')
         self._old_cwd = os.getcwd()
+        self._old_argv = sys.argv
         os.mkdir(self.workdir)
         os.chdir(self.workdir)
 
     def tear_down(self):
         os.chdir(self._old_cwd)
+        sys.argv = self._old_argv
         if os.path.exists(self.temp_dir):
             shutil.rmtree(self.temp_dir)
 
