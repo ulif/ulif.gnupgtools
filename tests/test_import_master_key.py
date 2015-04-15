@@ -221,7 +221,8 @@ class TestImportMasterKeyModule(object):
         assert b"DAA011C5" in out  # imported public key present
         assert b'sec#' in out      # imported master key not able to sign
 
-    def test_main_binary(self, gnupg_home_creator, capsys, output_args_script):
+    def test_main_option_binary(
+            self, gnupg_home_creator, capsys, output_args_script):
         # we can set a custom gpg path
         gnupg_home_creator.create_sample_gnupg_home('empty')
         path = os.path.join(
