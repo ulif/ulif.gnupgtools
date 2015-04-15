@@ -189,10 +189,18 @@ class TestImportMasterKeyModule(object):
         assert b"DAA011C5" in out  # imported public key present
         assert b'sec#' in out      # imported master key not able to sign
 
-    def test_import_master_key_respects_executable(
+    def test_import_master_key_arg_executable(
+            self, gnupg_home_creator, capsys, output_args_script):
+        # we can pass in an gpg executable (which is really used)
+        gnupg_home_creator.create_sample_gnupg_home('empty')
+        path = os.path.join(
+            os.path.dirname(__file__), 'export-samples', 'DAA011C5.tar.gz')
+        import_master_key(path, executable=output_args_script.path)
+        assert os.path.exists(output_args_script.out_path)
+
+    def test_import_master_key_invalid_executable(
             self, gnupg_home_creator, capsys):
         # if we pass in an invalid executable path, we cause trouble
-        # (which shows: the path is really tried to be used)
         gnupg_home_creator.create_sample_gnupg_home('one-secret')
         path = os.path.join(
             os.path.dirname(__file__), 'export-samples', 'DAA011C5.tar.gz')
