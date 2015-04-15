@@ -229,8 +229,6 @@ class TestImportMasterKeyModule(object):
         main(['gpg-import-master-key', '-b', output_args_script.path, path])
         result_path = output_args_script.out_path
         assert os.path.exists(result_path)   # the output file was written
-        out = open(result_path, 'r').read()
-        assert len(out.split(']')) == 3      # there were at least two calls
 
     @pytest.mark.skipif(not os.path.isfile("/usr/bin/gpg2"),
                         reason="No such file: '/usr/bin/gpg2'")
