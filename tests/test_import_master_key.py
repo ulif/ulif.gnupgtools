@@ -228,10 +228,15 @@ class TestImportMasterKeyModule(object):
     def test_main_no_options(self, gnupg_home_creator, capsys):
         # with no options we get a usage message
         with pytest.raises(SystemExit):
+            sys.argv = ['gpg-import-master-key', ]
             main()
         out, err = capsys.readouterr()
         assert 'usage:' in err
-        assert 'the following arguments are required' in err
+        assert (
+            ('the following arguments are required' in err)
+             or
+            ('too few arguments' in err)
+            )
 
     def test_main_option_binary(
             self, gnupg_home_creator, capsys, output_args_script):
