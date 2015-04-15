@@ -225,6 +225,14 @@ class TestImportMasterKeyModule(object):
         assert b"DAA011C5" in out  # imported public key present
         assert b'sec#' in out      # imported master key not able to sign
 
+    def test_main_no_options(self, gnupg_home_creator, capsys):
+        # with no options we get a usage message
+        with pytest.raises(SystemExit):
+            main()
+        out, err = capsys.readouterr()
+        assert 'usage:' in err
+        assert 'the following arguments are required' in err
+
     def test_main_option_binary(
             self, gnupg_home_creator, capsys, output_args_script):
         # we can set a custom gpg path
