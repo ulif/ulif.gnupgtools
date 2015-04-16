@@ -6,5 +6,6 @@ import sys
 
 if __name__ == '__main__':
     output_path = os.path.join(os.path.dirname(__file__), 'out')
+    print(sys.argv)                     # output on cmdline
     with open(output_path, 'a+') as fd:
-        fd.write(str(sys.argv))
+        fd.write(str(sys.argv))         # output in file
