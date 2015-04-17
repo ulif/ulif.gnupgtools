@@ -120,7 +120,9 @@ def import_master_key(path, executable='gpg'):
             infile_path = os.path.join(tmp_dir, 'key.%s' % key)
             with open(infile_path, 'wb') as infile_fd:
                 infile_fd.write(keys_dict[key])
-            out, err = execute([executable, opt, infile_path])
+            new_out, new_err = execute([executable, opt, infile_path])
+            out = (out or b'') + (new_out or b'')
+            err = (err or b'') + (new_err or b'')
     return out, err
 
 
